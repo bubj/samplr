@@ -19,12 +19,10 @@
 #'
 #' @examples
 #' betaPDF <- function(x) {
-#' ifelse(0 < x & x < 1, 2*x, 0)
+#'     ifelse(0 < x & x < 1, 2*x, 0)
 #' }
-#' hist(oneDSample(f = betaPDF, N = 10000, lb = 0, ub = 1, maxf = 2))
+#' hist(samp1D(betaPDF, 10000, 0, 1, 2))
 #'
-#'
-#' download roxygen2 package
 
 samp1D <- function(f,N,lb,ub,maxf) {
   ones <- runif(N, lb, ub)

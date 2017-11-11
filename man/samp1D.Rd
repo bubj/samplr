@@ -4,7 +4,7 @@
 \alias{samp1D}
 \title{Single Variable Rejection Sampler}
 \usage{
-samp1D(fun, a, b, lb, ub, maxf, N)
+samp1D(fun, a, b, lb, ub, N)
 }
 \arguments{
 \item{fun}{the pdf that we are sampling from, input as an expression}
@@ -16,8 +16,6 @@ samp1D(fun, a, b, lb, ub, maxf, N)
 \item{lb}{the lower bound of support f}
 
 \item{ub}{upper bound of support of f}
-
-\item{maxf}{bound on f}
 
 \item{N}{the number of attempted samples.}
 }
@@ -32,6 +30,6 @@ This paragrpah will show up somewhere else for additional information.
 }
 \examples{
 
-hist(samp1D(expression(2*x), 0, 1, 0, 1, 2, 10000))
+hist(samp1D(expression(2*x), 0, 1, 0, 1, 10000))
 
 }

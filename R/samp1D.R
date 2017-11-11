@@ -23,9 +23,9 @@
 samp1D <- function(fun,a,b,N) {
   g <- parse(text = fun)
   f <- function(x) {
-    ifelse(a < x & x < b, eval(g[[1]]), 0)
+    ifelse(a <= x & x <= b, eval(g[[1]]), 0)
   }
-  maxf <- max(f(seq(a,b,.001))+1)
+  maxf <- max(f(seq(a,b,.001)))
   ones <- runif(N, a, b)
   unis <- runif(N, 0, maxf)
   ones[unis < f(ones)]

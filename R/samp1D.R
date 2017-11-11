@@ -4,15 +4,11 @@
 #'
 #' This paragrpah will show up somewhere else for additional information.
 #'
-#' @param fun the pdf that we are sampling from, input as an expression
+#' @param fun the pdf that we are sampling from, input as a string
 #'
 #' @param a the lower bound on the function f
 #'
 #' @param b the upper bound on the function f
-#'
-#' @param lb the lower bound of support f
-#'
-#' @param ub upper bound of support of f
 #'
 #' @param N the number of attempted samples.
 #'
@@ -21,15 +17,16 @@
 #'
 #' @examples
 #'
-#' hist(samp1D(expression(2*x), 0, 1, 0, 1, 10000))
+#' hist(samp1D("2*x", 0, 1, 10000))
 #'
 
-samp1D <- function(fun,a,b,lb,ub,N) {
+samp1D <- function(fun,a,b,N) {
+  g <- parse(text = fun)
   f <- function(x) {
-    ifelse(a < x & x < b, eval(fun[[1]]), 0)
+    ifelse(a < x & x < b, eval(g[[1]]), 0)
   }
-  maxf <- max(f(seq(a,b,.01))+1)
-  ones <- runif(N, lb, ub)
+  maxf <- max(f(seq(a,b,.001))+1)
+  ones <- runif(N, a, b)
   unis <- runif(N, 0, maxf)
   ones[unis < f(ones)]
 }

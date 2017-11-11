@@ -4,9 +4,11 @@
 #'
 #' This paragrpah will show up somewhere else for additional information.
 #'
-#' @param f the pdf that we are sampling from
+#' @param fun the pdf that we are sampling from, input as an expression
 #'
-#' @param N the number of attempted samples.
+#' @param a the lower bound on the function f
+#'
+#' @param b the upper bound on the function f
 #'
 #' @param lb the lower bound of support f
 #'
@@ -14,17 +16,20 @@
 #'
 #' @param maxf bound on f
 #'
+#' @param N the number of attempted samples.
+#'
 #' @return A vector containg the samples form pdf
 #' @export
 #'
 #' @examples
-#' betaPDF <- function(x) {
-#'     ifelse(0 < x & x < 1, 2*x, 0)
-#' }
-#' hist(samp1D(betaPDF, 10000, 0, 1, 2))
+#'
+#' hist(samp1D(expression(2*x), 0, 1, 0, 1, 2, 10000))
 #'
 
-samp1D <- function(f,N,lb,ub,maxf) {
+samp1D <- function(fun,a,b,lb,ub,maxf,N) {
+  f <- function(x) {
+    ifelse(a < x & x < b, eval(fun[[1]]), 0)
+  }
   ones <- runif(N, lb, ub)
   unis <- runif(N, 0, maxf)
   ones[unis < f(ones)]

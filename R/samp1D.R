@@ -10,7 +10,7 @@
 #'
 #' @param b the upper bound on the function f
 #'
-#' @param N the number of attempted samples.
+#' @param N the number of samples output by the sampling function
 #'
 #' @return A vector containg the samples form pdf
 #' @export
@@ -26,7 +26,15 @@ samp1D <- function(fun,a,b,N) {
     ifelse(a <= x & x <= b, eval(g[[1]]), 0)
   }
   maxf <- optimize(f,c(a,b), tol = 0.0001, maximum = TRUE)
-  ones <- runif(N, a, b)
-  unis <- runif(N, 0, maxf$objective + .1)
-  ones[unis < f(ones)]
+  samples <- rep(0,N)
+  i <- 0
+  while ( i < N) {
+    potsamp <- runif(1,a,b)
+    testsamp <- runif(1, 0, maxf$objective + .1)
+    if ( testsamp < f(potsamp) ) {
+      samples[i+1] = potsamp
+      i = i + 1
+    }
+  }
+  samples
 }

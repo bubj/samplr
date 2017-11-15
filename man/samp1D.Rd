@@ -13,7 +13,7 @@ samp1D(fun, a, b, N)
 
 \item{b}{the upper bound on the function f}
 
-\item{N}{the number of attempted samples.}
+\item{N}{the number of samples output by the sampling function}
 }
 \value{
 A vector containg the samples form pdf

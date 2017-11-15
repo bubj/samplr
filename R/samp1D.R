@@ -25,8 +25,8 @@ samp1D <- function(fun,a,b,N) {
   f <- function(x) {
     ifelse(a <= x & x <= b, eval(g[[1]]), 0)
   }
-  maxf <- max(f(seq(a,b,.001)))
+  maxf <- optimize(f,c(a,b), tol = 0.0001, maximum = TRUE)
   ones <- runif(N, a, b)
-  unis <- runif(N, 0, maxf)
+  unis <- runif(N, 0, maxf$objective + .1)
   ones[unis < f(ones)]
 }

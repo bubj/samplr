@@ -7,22 +7,19 @@
 samp1D(fun, a, b, N)
 }
 \arguments{
-\item{fun}{the pdf that we are sampling from, input as a string}
+\item{fun}{the pdf that we are sampling from, input as a string. The variable sampled from must be input using the variable "x".}
 
-\item{a}{the lower bound on the function f}
+\item{a}{The lower bound of the pdf.}
 
-\item{b}{the upper bound on the function f}
+\item{b}{The upper bound of the pdf.}
 
-\item{N}{the number of samples output by the sampling function}
+\item{N}{The number of samples output by the sampling function.}
 }
 \value{
-A vector containg the samples form pdf
+A vector containing the samples form pdf
 }
 \description{
 This function immplents single variable rejection sampling for rvs with bounded support and which have bounded pdf.
-}
-\details{
-This paragrpah will show up somewhere else for additional information.
 }
 \examples{
 

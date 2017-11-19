@@ -2,17 +2,16 @@
 #'
 #' This function immplents single variable rejection sampling for rvs with bounded support and which have bounded pdf.
 #'
-#' This paragrpah will show up somewhere else for additional information.
 #'
-#' @param fun the pdf that we are sampling from, input as a string
+#' @param fun the pdf that we are sampling from, input as a string. The variable sampled from must be input using the variable "x".
 #'
-#' @param a the lower bound on the function f
+#' @param a The lower bound of the pdf.
 #'
-#' @param b the upper bound on the function f
+#' @param b The upper bound of the pdf.
 #'
-#' @param N the number of samples output by the sampling function
+#' @param N The number of samples output by the sampling function.
 #'
-#' @return A vector containg the samples form pdf
+#' @return A vector containing the samples form pdf
 #' @export
 #'
 #' @examples

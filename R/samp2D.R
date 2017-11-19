@@ -14,7 +14,7 @@
 #'
 #' @param N the number of samples output by the sampling function
 #'
-#' @return Matrix with N rows and 2 columns containing the samples from the pdf.
+#' @return A matrix with N rows and 2 columns containing the samples from the pdf.
 #' @export
 #'
 #' @examples

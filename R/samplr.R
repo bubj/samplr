@@ -1,3 +1,41 @@
+#' Single and Two Variable Rejection Sampler
+#'
+#' This function implements both one and two variable rejection sampling for rvs with bounded support and which have bounded pdf.
+#'
+#' @param fun The pdf that we are sampling from, input as a string. For one variable, the input variable must be declared as `x`. For two variables, the input variables must be declared as `x` and `y`.
+#'
+#' @param a The lower bound of the variable `x` in the pdf.
+#'
+#' @param b The upper bound of the variable `x` in the pdf.
+#'
+#' @param N The number of samples output by the rejection sampler.
+#'
+#' @param c The lower bound of the variable `y` in the pdf.
+#'
+#' @param d The upper bound of the variable `y` in the pdf.
+#'
+#' @return If using a single variable, the output is a vector containing the samples. If two variables, the output is a matrix with N rows and 2 columns containing the samples.
+#' @export
+#'
+#' @examples
+#'
+#' Single variable
+#'
+#' samps <- samplr("2*x", 0, 1, 10000)
+#' hist(samps)
+#'
+#' Two variable
+#'
+#' requires(ggplot2)
+#'
+#' samps <- samplr("x+y",a = 0,b = 1,c = 0,d = 1,N = 10000)
+#' samps <- data.frame(samps)
+#' colnames(samps) <- c("x","y")
+#' ggplot(samps, aes(x, y)) +
+#'     geom_density_2d()
+#'
+
+
 samplr <- function(fun, a, b, N, c = NULL, d = NULL) {
   if (is.null(c) & is.null(d)) {
     g <- parse(text = fun) # changes the input fun string into an expression

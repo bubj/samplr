@@ -20,20 +20,20 @@
 #'
 
 samp1D <- function(fun,a,b,N) {
-  g <- parse(text = fun)
+  g <- parse(text = fun) # changes the input fun string into an expression
   f <- function(x) {
-    ifelse(a <= x & x <= b, eval(g[[1]]), 0)
+    ifelse(a <= x & x <= b, eval(g[[1]]), 0) # defines the pdf as a function by evaluating the expression g
   }
-  maxf <- optimize(f,c(a,b), tol = 0.0001, maximum = TRUE)
-  samples <- rep(0,N)
+  maxf <- optimize(f,c(a,b), tol = 0.0001, maximum = TRUE) # uses the optimize function to find the maximum of the pdf
+  samples <- rep(0,N) # creates a vector for storing the sample values
   i <- 0
-  while ( i < N) {
-    potsamp <- runif(1,a,b)
-    testsamp <- runif(1, 0, maxf$objective + .1)
-    if ( testsamp < f(potsamp) ) {
+  while ( i < N) { # while loop that runs until N samples are selected
+    potsamp <- runif(1,a,b) # creating a potential sample
+    testsamp <- runif(1, 0, maxf$objective + .1) # creating a test sample. Uses maxf$objective to get the max of the function, and adds .1 to account for errors in tolerance
+    if ( testsamp < f(potsamp) ) { # tests if the potential sample should be rejected. If it is kept, it is kept in the samples vector
       samples[i+1] = potsamp
       i = i + 1
     }
   }
-  samples
+  samples # output the samples
 }

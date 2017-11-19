@@ -20,7 +20,7 @@ samp2D(fun, a, b, c, d, N)
 \item{N}{the number of samples output by the sampling function}
 }
 \value{
-Matrix with N rows and 2 columns containing the samples from the pdf.
+A matrix with N rows and 2 columns containing the samples from the pdf.
 }
 \description{
 This function implements two variable rejection sampling for rvs with bounded support and which have bounded pdf.

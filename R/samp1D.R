@@ -49,7 +49,7 @@ samp1D <- function(f,N) {
   leftboundpos <- leftboundpos[which(leftboundpos > 0)]
   leftbounds <- rep(0,length(leftboundpos))
   for (j in 1:length(leftboundpos)) {
-    leftbounds[j] <- as.numeric(gsub("[^0-9\\-]","",(substr(text,leftboundpos[j]-5,leftboundpos[j]+5))))
+    leftbounds[j] <- as.numeric(gsub("[^0-9\\-]","",(substr(text,leftboundpos[j]-6,leftboundpos[j]+6))))
   }
   leftbound <- min(leftbounds)
   rm(leftboundpos,leftbounds,pleftpos)
@@ -77,24 +77,43 @@ samp1D <- function(f,N) {
     i <- i + 1
   }
   rightboundpos <- rightboundpos[which(rightboundpos > 0)]
-  rightbounds <- rep(0,length(rightboundpos))
-  for (j in 1:length(rightboundpos)) {
-    rightbounds[j] <- as.numeric(gsub("[^0-9\\-]","",(substr(text,rightboundpos[j]-5,rightboundpos[j]+5))))
+  if (length(rightboundpos) != 0) {
+    rightbounds <- rep(0,length(rightboundpos))
+    for (j in 1:length(rightboundpos)) {
+      rightbounds[j] <- as.numeric(gsub("[^0-9\\-]","",(substr(text,rightboundpos[j]-6,rightboundpos[j]+6))))
+    }
+    rightbound <- max(rightbounds)
+    rm(rightboundpos,rightbounds,prightpos)
+  } else {
+    rightbound <- NA
   }
-  rightbound <- max(rightbounds)
-  rm(rightboundpos,rightbounds,prightpos)
-
-  maxf <- optimize(f,c(leftbound,rightbound),maximum = TRUE)
-  maxf <- maxf$objective + .1
   samples <- rep(0,N) # creates a vector for storing the sample values
-  i <- 0
-  while ( i < N) { # while loop that runs until N samples are selected
-    potsamp <- runif(1,leftbound,rightbound) # creating a potential sample
-    testsamp <- runif(1, 0, maxf) # creating a test sample. Uses maxf$objective to get the max of the function, and adds .1 to account for errors in tolerance
-    if ( testsamp < f(potsamp) ) { # tests if the potential sample should be rejected. If it is kept, it is kept in the samples vector
-      samples[i+1] = potsamp
-      i = i + 1
+  if (!is.na(rightbound) & !is.na(leftbound)) {
+    maxf <- optimize(f,c(leftbound,rightbound),maximum = TRUE)
+    maxf <- maxf$objective + .1
+    i <- 0
+    while ( i < N) { # while loop that runs until N samples are selected
+      potsamp <- runif(1,leftbound,rightbound) # creating a potential sample
+      testsamp <- runif(1, 0, maxf) # creating a test sample. Uses maxf$objective to get the max of the function, and adds .1 to account for errors in tolerance
+      if ( testsamp < f(potsamp) ) { # tests if the potential sample should be rejected. If it is kept, it is kept in the samples vector
+        samples[i+1] = potsamp
+        i = i + 1
+      }
     }
   }
-  samples # output the samples
+  else if (is.na(rightbound) & !is.na(leftbound)) {
+    maxf <- optimize(f,c(leftbound,leftbound+5), maximum = TRUE)
+    maxf <- maxf$objective + .1
+    maxf
+    i <- 0
+    while ( i < N) {
+      potsamp <- rexp(1,rate = 1)
+      testsamp <- runif(1, 0, maxf*dexp(potsamp, rate = 1))
+      if ( testsamp < f(potsamp) ) {
+        samples[i+1] <- potsamp
+        i <- i + 1
+      }
+    }
+  }
+  samples
 }

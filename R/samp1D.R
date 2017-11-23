@@ -19,17 +19,76 @@
 #' hist(samp1D("2*x", 0, 1, 10000))
 #'
 
-samp1D <- function(fun,a,b,N) {
-  g <- parse(text = fun) # changes the input fun string into an expression
-  f <- function(x) {
-    ifelse(a <= x & x <= b, eval(g[[1]]), 0) # defines the pdf as a function by evaluating the expression g
+samp1D <- function(f,N) {
+  text <- toString(body(f))
+  leftboundpos <- rep(0,10)
+  rightboundpos <- rep(0,10)
+
+  # find the left bound of the function
+  i <- 1
+  pleftpos <- gregexpr('< x',text)
+  for (j in 1:length(pleftpos[[1]])) {
+    leftboundpos[i] <- pleftpos[[1]][j]
+    i <- i + 1
   }
-  maxf <- optimize(f,c(a,b), tol = 0.0001, maximum = TRUE) # uses the optimize function to find the maximum of the pdf
+  pleftpos <- gregexpr('<= x',text)
+  for (j in 1:length(pleftpos[[1]])) {
+    leftboundpos[i] <- pleftpos[[1]][j]
+    i <- i + 1
+  }
+  pleftpos <- gregexpr('x >',text)
+  for (j in 1:length(pleftpos[[1]])) {
+    leftboundpos[i] <- pleftpos[[1]][j]
+    i <- i + 1
+  }
+  pleftpos <- gregexpr('x >=',text)
+  for (j in 1:length(pleftpos[[1]])) {
+    leftboundpos[i] <- pleftpos[[1]][j]
+    i <- i + 1
+  }
+  leftboundpos <- leftboundpos[which(leftboundpos > 0)]
+  leftbounds <- rep(0,length(leftboundpos))
+  for (j in 1:length(leftboundpos)) {
+    leftbounds[j] <- as.numeric(gsub("[^0-9\\-]","",(substr(text,leftboundpos[j]-5,leftboundpos[j]+5))))
+  }
+  leftbound <- min(leftbounds)
+
+  #find the right bound of the function
+  i <- 1
+  prightpos <- gregexpr('> x',text)
+  for (j in 1:length(prightpos[[1]])) {
+    rightboundpos[i] <- prightpos[[1]][j]
+    i <- i + 1
+  }
+  prightpos <- gregexpr('>= x',text)
+  for (j in 1:length(prightpos[[1]])) {
+    rightboundpos[i] <- prightpos[[1]][j]
+    i <- i + 1
+  }
+  prightpos <- gregexpr('x < ',text)
+  for (j in 1:length(prightpos[[1]])) {
+    rightboundpos[i] <- prightpos[[1]][j]
+    i <- i + 1
+  }
+  prightpos <- gregexpr('x <= ',text)
+  for (j in 1:length(prightpos[[1]])) {
+    rightboundpos[i] <- prightpos[[1]][j]
+    i <- i + 1
+  }
+  rightboundpos <- rightboundpos[which(rightboundpos > 0)]
+  rightbounds <- rep(0,length(rightboundpos))
+  for (j in 1:length(leftboundpos)) {
+    rightbounds[j] <- as.numeric(gsub("[^0-9\\-]","",(substr(text,rightboundpos[j]-5,rightboundpos[j]+5))))
+  }
+  rightbound <- max(rightbounds)
+
+  maxf <- optimize(f,c(leftbound,rightbound),maximum = TRUE)
+  maxf <- maxf$objective + .1
   samples <- rep(0,N) # creates a vector for storing the sample values
   i <- 0
   while ( i < N) { # while loop that runs until N samples are selected
-    potsamp <- runif(1,a,b) # creating a potential sample
-    testsamp <- runif(1, 0, maxf$objective + .1) # creating a test sample. Uses maxf$objective to get the max of the function, and adds .1 to account for errors in tolerance
+    potsamp <- runif(1,leftbound,rightbound) # creating a potential sample
+    testsamp <- runif(1, 0, maxf) # creating a test sample. Uses maxf$objective to get the max of the function, and adds .1 to account for errors in tolerance
     if ( testsamp < f(potsamp) ) { # tests if the potential sample should be rejected. If it is kept, it is kept in the samples vector
       samples[i+1] = potsamp
       i = i + 1

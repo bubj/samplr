@@ -34,6 +34,7 @@
 #' ggplot(samps, aes(x, y)) +
 #'     geom_density_2d()
 #'
+#'
 
 
 samplr <- function(fun, a, b, N, c = NULL, d = NULL) {

@@ -36,12 +36,12 @@ samp1D <- function(f,N) {
     leftboundpos[i] <- pleftpos[[1]][j]
     i <- i + 1
   }
-  pleftpos <- gregexpr('x >',text)
+  pleftpos <- gregexpr('x > ',text)
   for (j in 1:length(pleftpos[[1]])) {
     leftboundpos[i] <- pleftpos[[1]][j]
     i <- i + 1
   }
-  pleftpos <- gregexpr('x >=',text)
+  pleftpos <- gregexpr('x >= ',text)
   for (j in 1:length(pleftpos[[1]])) {
     leftboundpos[i] <- pleftpos[[1]][j]
     i <- i + 1
@@ -52,6 +52,7 @@ samp1D <- function(f,N) {
     leftbounds[j] <- as.numeric(gsub("[^0-9\\-]","",(substr(text,leftboundpos[j]-5,leftboundpos[j]+5))))
   }
   leftbound <- min(leftbounds)
+  rm(leftboundpos,leftbounds,pleftpos)
 
   #find the right bound of the function
   i <- 1
@@ -77,10 +78,11 @@ samp1D <- function(f,N) {
   }
   rightboundpos <- rightboundpos[which(rightboundpos > 0)]
   rightbounds <- rep(0,length(rightboundpos))
-  for (j in 1:length(leftboundpos)) {
+  for (j in 1:length(rightboundpos)) {
     rightbounds[j] <- as.numeric(gsub("[^0-9\\-]","",(substr(text,rightboundpos[j]-5,rightboundpos[j]+5))))
   }
   rightbound <- max(rightbounds)
+  rm(rightboundpos,rightbounds,prightpos)
 
   maxf <- optimize(f,c(leftbound,rightbound),maximum = TRUE)
   maxf <- maxf$objective + .1

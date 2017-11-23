@@ -27,20 +27,137 @@
 #'
 
 
-samp2D <- function(fun,a,b,c,d,N) {
-  g <- parse(text = fun) # convert the input fun string into an expression
-  f <- function(z) {
-    x <- z[1]
-    y <- z[2]
-    ifelse(a <= x & x <= b & c <= y & y <= d, eval(g[[1]]), 0) # defining the pdf as a function where the input is a vector. The expression g is evaluated to get the equation.
+samp2D <- function(f,N) {
+  text <- toString(body(f))
+  xminpos <- rep(0,10)
+  xmaxpos <- rep(0,10)
+  yminpos <- rep(0,10)
+  ymaxpos <- rep(0,10)
+
+  # x lower bound
+  i <- 1
+  pxminpos <- gregexpr('< x ',text)
+  for (j in 1:length(pxminpos[[1]])) {
+    xminpos[i] <- pxminpos[[1]][j]
+    i <- i + 1
   }
-  maxf <- optim(c(b/2,d/2),f,control = list(fnscale = -1)) # finds the maximum of the pdf
+  pxminpos <- gregexpr('<= x ',text)
+  for (j in 1:length(pxminpos[[1]])) {
+    xminpos[i] <- pxminpos[[1]][j]
+    i <- i + 1
+  }
+  pxminpos <- gregexpr('x > ',text)
+  for (j in 1:length(pxminpos[[1]])) {
+    xminpos[i] <- pxminpos[[1]][j]
+    i <- i + 1
+  }
+  pxminpos <- gregexpr('x >= ',text)
+  for (j in 1:length(pxminpos[[1]])) {
+    xminpos[i] <- pxminpos[[1]][j]
+    i <- i + 1
+  }
+  xminpos <- xminpos[which(xminpos > 0)]
+  xmins <- rep(0,length(xminpos))
+  for (j in 1:length(xmins)) {
+    xmins[j] <- as.numeric(gsub('[^0-9//-]',"",substr(text,xminpos[j]-5,xminpos[j]+5)))
+  }
+  xmin <- min(xmins)
+
+  # x upper bound
+  i <- 1
+  pxmaxpos <- gregexpr('x < ',text)
+  for (j in 1:length(pxmaxpos[[1]])) {
+    xmaxpos[i] <- pxmaxpos[[1]][j]
+    i <- i + 1
+  }
+  pxmaxpos <- gregexpr('x <= ',text)
+  for (j in 1:length(pxmaxpos[[1]])) {
+    xmaxpos[i] <- pxmaxpos[[1]][j]
+    i <- i + 1
+  }
+  pxmaxpos <- gregexpr('> x ',text)
+  for (j in 1:length(pxmaxpos[[1]])) {
+    xmaxpos[i] <- pxmaxpos[[1]][j]
+    i <- i + 1
+  }
+  pxmaxpos <- gregexpr('>= x ',text)
+  for (j in 1:length(pxmaxpos[[1]])) {
+    xmaxpos[i] <- pxmaxpos[[1]][j]
+    i <- i + 1
+  }
+  xmaxpos <- xmaxpos[which(xmaxpos > 0)]
+  xmaxs <- rep(0,length(xmaxpos))
+  for (j in 1:length(xmaxs)) {
+    xmaxs[j] <- as.numeric(gsub('[^0-9//-]',"",substr(text,xmaxpos[j]-5,xmaxpos[j]+5)))
+  }
+  xmax <- max(xmaxs)
+
+  # y lower bound
+  i <- 1
+  pyminpos <- gregexpr('< y ',text)
+  for (j in 1:length(pyminpos[[1]])) {
+    yminpos[i] <- pyminpos[[1]][j]
+    i <- i + 1
+  }
+  pyminpos <- gregexpr('<= y ',text)
+  for (j in 1:length(pyminpos[[1]])) {
+    yminpos[i] <- pyminpos[[1]][j]
+    i <- i + 1
+  }
+  pyminpos <- gregexpr('y > ',text)
+  for (j in 1:length(pyminpos[[1]])) {
+    yminpos[i] <- pyminpos[[1]][j]
+    i <- i + 1
+  }
+  pyminpos <- gregexpr('y >= ',text)
+  for (j in 1:length(pyminpos[[1]])) {
+    yminpos[i] <- pyminpos[[1]][j]
+    i <- i + 1
+  }
+  yminpos <- yminpos[which(yminpos > 0)]
+  ymins <- rep(0,length(yminpos))
+  for (j in 1:length(ymins)) {
+    ymins[j] <- as.numeric(gsub('[^0-9//-]',"",substr(text,yminpos[j]-5,yminpos[j]+5)))
+  }
+  ymin <- min(ymins)
+
+  # y upper bound
+  i <- 1
+  pymaxpos <- gregexpr('y < ',text)
+  for (j in 1:length(pymaxpos[[1]])) {
+    ymaxpos[i] <- pymaxpos[[1]][j]
+    i <- i + 1
+  }
+  pymaxpos <- gregexpr('y <= ',text)
+  for (j in 1:length(pymaxpos[[1]])) {
+    ymaxpos[i] <- pymaxpos[[1]][j]
+    i <- i + 1
+  }
+  pymaxpos <- gregexpr('> y ',text)
+  for (j in 1:length(pymaxpos[[1]])) {
+    ymaxpos[i] <- pymaxpos[[1]][j]
+    i <- i + 1
+  }
+  pymaxpos <- gregexpr('>= y ',text)
+  for (j in 1:length(pymaxpos[[1]])) {
+    ymaxpos[i] <- pymaxpos[[1]][j]
+    i <- i + 1
+  }
+  ymaxpos <- ymaxpos[which(ymaxpos > 0)]
+  ymaxs <- rep(0,length(ymaxpos))
+  for (j in 1:length(ymaxs)) {
+    ymaxs[j] <- as.numeric(gsub('[^0-9//-]',"",substr(text,ymaxpos[j]-5,ymaxpos[j]+5)))
+  }
+  ymax <- max(ymaxs)
+  matrix(c(xmin,xmax,ymin,ymax),nrow = 2, ncol = 2,byrow = TRUE)
+  maxf <- optim(c(xmax/2,ymax/2),f,control = list(fnscale = -1)) # finds the maximum of the pdf
+  maxf <- maxf$value + .1
   samples <- matrix(rep(0,2*N), nrow = N, ncol = 2) # creating a matrix to store the samples in
   i <- 0
   while( i < N) { # while loop that runs unil N accepted samples are found.
-    psx <- runif(1,a,b) # creating a potential x value to be tested
-    psy <- runif(1,c,d) # creating a potential y value to be tested
-    testsamp <- runif(1,0, maxf$value + .1) # creating a test sample using maxf$value to find the max of the pdf and adding .1 to account for errors in tolerance.
+    psx <- runif(1,xmin,xmax) # creating a potential x value to be tested
+    psy <- runif(1,ymin,ymax) # creating a potential y value to be tested
+    testsamp <- runif(1,0, maxf) # creating a test sample using maxf$value to find the max of the pdf and adding .1 to account for errors in tolerance.
     if (testsamp < f(c(psx,psy))) { # tests if the potential x and y values should be rejected. If kept, the x value is stored in the first column and the y value in the second of the samples matrix.
       samples[i+1,1] <- psx
       samples[i+1,2] <- psy

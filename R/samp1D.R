@@ -47,7 +47,7 @@ samp1D <- function(f,N) {
     i <- i + 1
   }
   leftboundpos <- leftboundpos[which(leftboundpos > 0)]
-  if (leftboundpos != 0) {
+  if (length(leftboundpos) != 0) {
     leftbounds <- rep(0,length(leftboundpos))
     for (j in 1:length(leftboundpos)) {
       leftbounds[j] <- as.numeric(gsub("[^0-9\\-]","",(substr(text,leftboundpos[j]-6,leftboundpos[j]+6))))

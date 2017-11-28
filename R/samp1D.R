@@ -95,7 +95,7 @@ samp1D <- function(f,N) {
   }
 
   if ( length(rightbounds) == length(leftboundpos) ) {
-    if ( lentgh(rightbounds) == 1 ) {
+    if ( length(rightbounds) == 1 ) {
       if ( rightbounds[1] == leftbounds[1] ) {
         rightbound <- NA
         leftbound <- NA

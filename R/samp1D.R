@@ -47,8 +47,8 @@ samp1D <- function(f,N) {
     i <- i + 1
   }
   leftboundpos <- leftboundpos[which(leftboundpos > 0)]
+  leftbounds <- rep(0,length(leftboundpos))
   if (length(leftboundpos) != 0) {
-    leftbounds <- rep(0,length(leftboundpos))
     for (j in 1:length(leftboundpos)) {
       leftbounds[j] <- as.numeric(gsub("[^0-9\\-]","",(substr(text,leftboundpos[j]-6,leftboundpos[j]+6))))
     }
@@ -82,8 +82,8 @@ samp1D <- function(f,N) {
     i <- i + 1
   }
   rightboundpos <- rightboundpos[which(rightboundpos > 0)]
+  rightbounds <- rep(0,length(rightboundpos))
   if (length(rightboundpos) != 0) {
-    rightbounds <- rep(0,length(rightboundpos))
     for (j in 1:length(rightboundpos)) {
       rightbounds[j] <- as.numeric(gsub("[^0-9\\-]","",(substr(text,rightboundpos[j]-6,rightboundpos[j]+6))))
     }

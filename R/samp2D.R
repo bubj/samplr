@@ -19,11 +19,16 @@
 #'
 #' @examples
 #'
-#' samps <- samp2D("x + y", 0, 1, 0, 1, 10000)
+#' f <- function(z) {
+#'  x <- z[1]
+#'  y <- z[2]
+#'  ifelse(0 <= x & x <= 1 & 0 <= y & y <= 1, x + y, 0)
+#' }
+#' samps <- samp2D(f, 10000)
 #' samps <- data.frame(samps)
 #' colnames(samps) <- c("x","y")
 #' ggplot(samps, aes(x, y)) +
-#'     geom_density_2d()
+#'  geom_density_2d()
 #'
 
 
@@ -58,10 +63,15 @@ samp2D <- function(f,N) {
   }
   xminpos <- xminpos[which(xminpos > 0)]
   xmins <- rep(0,length(xminpos))
-  for (j in 1:length(xmins)) {
-    xmins[j] <- as.numeric(gsub('[^0-9//-]',"",substr(text,xminpos[j]-5,xminpos[j]+5)))
+  if (length(xmins) != 0) {
+    for (j in 1:length(xmins)) {
+      xmins[j] <- as.numeric(gsub('[^0-9//-//.]',"",substr(text,xminpos[j]-5,xminpos[j]+5)))
+    }
+    xmin <- min(xmins)
   }
-  xmin <- min(xmins)
+  else {
+    xmin <- NA
+  }
 
   # x upper bound
   i <- 1
@@ -87,10 +97,15 @@ samp2D <- function(f,N) {
   }
   xmaxpos <- xmaxpos[which(xmaxpos > 0)]
   xmaxs <- rep(0,length(xmaxpos))
-  for (j in 1:length(xmaxs)) {
-    xmaxs[j] <- as.numeric(gsub('[^0-9//-]',"",substr(text,xmaxpos[j]-5,xmaxpos[j]+5)))
+  if (length(xmaxs) != 0) {
+    for (j in 1:length(xmaxs)) {
+      xmaxs[j] <- as.numeric(gsub('[^0-9//-//.]',"",substr(text,xmaxpos[j]-5,xmaxpos[j]+5)))
+    }
+    xmax <- max(xmaxs)
   }
-  xmax <- max(xmaxs)
+  else {
+    xmax <- NA
+  }
 
   # y lower bound
   i <- 1
@@ -116,10 +131,15 @@ samp2D <- function(f,N) {
   }
   yminpos <- yminpos[which(yminpos > 0)]
   ymins <- rep(0,length(yminpos))
-  for (j in 1:length(ymins)) {
-    ymins[j] <- as.numeric(gsub('[^0-9//-]',"",substr(text,yminpos[j]-5,yminpos[j]+5)))
+  if (length(ymins) != 0) {
+    for (j in 1:length(ymins)) {
+      ymins[j] <- as.numeric(gsub('[^0-9//-//.]',"",substr(text,yminpos[j]-5,yminpos[j]+5)))
+    }
+    ymin <- min(ymins)
   }
-  ymin <- min(ymins)
+  else {
+    ymin <- NA
+  }
 
   # y upper bound
   i <- 1
@@ -145,11 +165,16 @@ samp2D <- function(f,N) {
   }
   ymaxpos <- ymaxpos[which(ymaxpos > 0)]
   ymaxs <- rep(0,length(ymaxpos))
-  for (j in 1:length(ymaxs)) {
-    ymaxs[j] <- as.numeric(gsub('[^0-9//-]',"",substr(text,ymaxpos[j]-5,ymaxpos[j]+5)))
+  if (length(ymaxs) != 0){
+    for (j in 1:length(ymaxs)) {
+      ymaxs[j] <- as.numeric(gsub('[^0-9//-//.]',"",substr(text,ymaxpos[j]-5,ymaxpos[j]+5)))
+    }
+    ymax <- max(ymaxs)
   }
-  ymax <- max(ymaxs)
-  matrix(c(xmin,xmax,ymin,ymax),nrow = 2, ncol = 2,byrow = TRUE)
+  else {
+    ymax <- NA
+  }
+
   maxf <- optim(c(xmax/2,ymax/2),f,control = list(fnscale = -1)) # finds the maximum of the pdf
   maxf <- maxf$value + .1
   samples <- matrix(rep(0,2*N), nrow = N, ncol = 2) # creating a matrix to store the samples in

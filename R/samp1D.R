@@ -20,11 +20,11 @@
 #'
 
 samp1D <- function(f,N) {
-  text <- toString(body(f))
+  text <- toString(body(f)) # convert body of the function to a string
   leftboundpos <- rep(0,10)
   rightboundpos <- rep(0,10)
 
-  # find the left bound of the function
+  # find the left bound of the function by searching for where the variable x is greater than some value
   i <- 1
   pleftpos <- gregexpr('< x',text)
   for (j in 1:length(pleftpos[[1]])) {
@@ -47,14 +47,19 @@ samp1D <- function(f,N) {
     i <- i + 1
   }
   leftboundpos <- leftboundpos[which(leftboundpos > 0)]
-  leftbounds <- rep(0,length(leftboundpos))
-  for (j in 1:length(leftboundpos)) {
-    leftbounds[j] <- as.numeric(gsub("[^0-9\\-]","",(substr(text,leftboundpos[j]-6,leftboundpos[j]+6))))
+  if (leftboundpos != 0) {
+    leftbounds <- rep(0,length(leftboundpos))
+    for (j in 1:length(leftboundpos)) {
+      leftbounds[j] <- as.numeric(gsub("[^0-9\\-]","",(substr(text,leftboundpos[j]-6,leftboundpos[j]+6))))
+    }
+###      leftbound <- min(leftbounds)
+###      rm(leftboundpos,leftbounds,pleftpos)
   }
-  leftbound <- min(leftbounds)
-  rm(leftboundpos,leftbounds,pleftpos)
+  else {
+    leftbound <- NA
+  }
 
-  #find the right bound of the function
+  #find the right bound of the function by searching where the variable x is less than a value
   i <- 1
   prightpos <- gregexpr('> x',text)
   for (j in 1:length(prightpos[[1]])) {
@@ -82,10 +87,38 @@ samp1D <- function(f,N) {
     for (j in 1:length(rightboundpos)) {
       rightbounds[j] <- as.numeric(gsub("[^0-9\\-]","",(substr(text,rightboundpos[j]-6,rightboundpos[j]+6))))
     }
-    rightbound <- max(rightbounds)
-    rm(rightboundpos,rightbounds,prightpos)
-  } else {
+###    rightbound <- max(rightbounds)
+###    rm(rightboundpos,rightbounds,prightpos)
+  }
+  else {
     rightbound <- NA
+  }
+
+  if ( length(rightbounds) == length(leftboundpos) ) {
+    if ( lentgh(rightbounds) == 1 ) {
+      if ( rightbounds[1] == leftbounds[1] ) {
+        rightbound <- NA
+        leftbound <- NA
+      }
+      else {
+        rightbound <- max(rightbounds)
+        leftbound <- min(leftbounds)
+      }
+    }
+    else {
+      rightbound <- max(rightbounds)
+      leftbounds <- min(leftbounds)
+    }
+  }
+  else {
+    if (length(rightbounds) < length(leftbounds)) {
+      rightbound <- NA
+      leftbound <- min(leftbounds)
+    }
+    else {
+      rightbound <- max(rightbounds)
+      leftbound <- NA
+    }
   }
 
   samples <- rep(0,N) # creates a vector for storing the sample values

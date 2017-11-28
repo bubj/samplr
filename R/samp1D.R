@@ -110,7 +110,7 @@ samp1D <- function(f,N) {
       }
       else {
         rightbound <- max(rightbounds)
-        leftbounds <- min(leftbounds)
+        leftbound <- min(leftbounds)
       }
     }
     else {

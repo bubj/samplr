@@ -50,11 +50,9 @@ samp1D <- function(f,N) {
   leftbounds <- rep(0,length(leftboundpos))
   if (length(leftboundpos) != 0) {
     for (j in 1:length(leftboundpos)) {
-      leftbounds[j] <- as.numeric(gsub("[^0-9\\-]","",(substr(text,leftboundpos[j]-6,leftboundpos[j]+6))))
+      leftbounds[j] <- as.numeric(gsub("[^0-9\\-\\.]","",(substr(text,leftboundpos[j]-6,leftboundpos[j]+6))))
       leftbound <- min(leftbounds)
     }
-###      leftbound <- min(leftbounds)
-###      rm(leftboundpos,leftbounds,pleftpos)
   }
   else {
     leftbound <- NA
@@ -86,11 +84,10 @@ samp1D <- function(f,N) {
   rightbounds <- rep(0,length(rightboundpos))
   if (length(rightboundpos) != 0) {
     for (j in 1:length(rightboundpos)) {
-      rightbounds[j] <- as.numeric(gsub("[^0-9\\-]","",(substr(text,rightboundpos[j]-6,rightboundpos[j]+6))))
+      rightbounds[j] <- as.numeric(gsub("[^0-9\\-\\.]","",(substr(text,rightboundpos[j]-6,rightboundpos[j]+6))))
       rightbound <- max(rightbounds)
     }
-###    rightbound <- max(rightbounds)
-###    rm(rightboundpos,rightbounds,prightpos)
+
   }
   else {
     rightbound <- NA
@@ -124,6 +121,7 @@ samp1D <- function(f,N) {
       }
     }
   }
+
   samples <- rep(0,N) # creates a vector for storing the sample values
   if (!is.na(rightbound) & !is.na(leftbound)) {
     maxf <- optimize(f,c(leftbound,rightbound),maximum = TRUE)
@@ -138,6 +136,7 @@ samp1D <- function(f,N) {
       }
     }
   }
+
   else {
     maxfvalues <- rep(0,100)
     maxes <- rep(0,100)
@@ -172,51 +171,4 @@ samp1D <- function(f,N) {
     }
   }
   samples
-
-
-
-  # else if (is.na(rightbound) & !is.na(leftbound)) {
-  #   maxf <- optimize(f,c(leftbound,leftbound+5), maximum = TRUE)
-  #   maxf <- maxf$objective + .1
-  #   i <- 0
-  #   while ( i < N) {
-  #     potsamp <- rexp(1,rate = 1)
-  #     testsamp <- runif(1, 0, maxf*dexp(potsamp, rate = 1))
-  #     if ( testsamp < f(potsamp) ) {
-  #       samples[i+1] <- potsamp
-  #       i <- i + 1
-  #     }
-  #   }
-  # }
-  #
-  # else if (!is.na(rightbound) & is.na(leftbound)) {
-  #   maxf <- optimize(f,c(rightbound-5,rightbound), maximum = TRUE)
-  #   maxf <- maxf$objective + .1
-  #   i <- 0
-  #   while ( i < N) {
-  #     potsamp <- -rexp(1,rate = 1)
-  #     testsamp <- runif(1,0, maxf*dexp(-potsamp, rate = 1))
-  #     if ( testsamp < f(potsamp) ) {
-  #       samples[i+1] <- potsamp
-  #       i <- i + 1
-  #     }
-  #   }
-  # }
-  #
-  # else if (is.na(rightound) & is.na(leftbound)) {
-  #   maxf <- optimize(f,c(-10,10), maximum = TRUE)
-  #   maxf <- maxf$objective + .1
-  #   i <- 0
-  #   while ( i < N) {
-  #     potsamp <- rnorm(1,0,1)
-  #     testsamp <- runif(1,0, maxf*dnorm(potsamp,0,1))
-  #     if ( testsamp < f(potsamp) ) {
-  #       samples[i+1] <- potsamp
-  #       i <- i + 1
-  #     }
-  #   }
-  # }
-
-#  samples
-
 }

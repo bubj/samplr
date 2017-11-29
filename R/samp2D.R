@@ -67,7 +67,12 @@ samp2D <- function(f,N) {
     for (j in 1:length(xmins)) {
       xmins[j] <- as.numeric(gsub('[^0-9//-//.//y]',"",substr(text,xminpos[j]-5,xminpos[j]+5)))
     }
-    xmin <- min(xmins[which(!is.na(xmins))])
+    if (is.numeric(xmins) == TRUE) {
+      xmin <- min(xmins[which(!is.na(xmins))])
+    }
+    else {
+      xmin <- "y"
+    }
   }
   else {
     xmin <- NA
@@ -101,7 +106,12 @@ samp2D <- function(f,N) {
     for (j in 1:length(xmaxs)) {
       xmaxs[j] <- as.numeric(gsub('[^0-9//-//.//y]',"",substr(text,xmaxpos[j]-5,xmaxpos[j]+5)))
     }
-    xmax <- max(xmaxs[which(!is.na(xmaxs))])
+    if (is.numeric(xmaxs) == TRUE) {
+      xmax <- max(xmaxs[which(!is.na(xmaxs))])
+    }
+    else {
+      xmax <- "y"
+    }
   }
   else {
     xmax <- NA
@@ -135,7 +145,12 @@ samp2D <- function(f,N) {
     for (j in 1:length(ymins)) {
       ymins[j] <- as.numeric(gsub('[^0-9//-//.//x]',"",substr(text,yminpos[j]-5,yminpos[j]+5)))
     }
-    ymin <- min(ymins[which(!is.na(ymins))])
+    if (is.numeric(ymins) == TRUE){
+      ymin <- min(ymins[which(!is.na(ymins))])
+    }
+    else {
+      ymin <- "x"
+    }
   }
   else {
     ymin <- NA
@@ -169,24 +184,102 @@ samp2D <- function(f,N) {
     for (j in 1:length(ymaxs)) {
       ymaxs[j] <- as.numeric(gsub('[^0-9//-//.//x]',"",substr(text,ymaxpos[j]-5,ymaxpos[j]+5)))
     }
-    ymax <- max(ymaxs[which(!is.na(ymaxs))])
+    if (is.numeric(ymaxs) == TRUE) {
+      ymax <- max(ymaxs[which(!is.na(ymaxs))])
+    }
+    else {
+      ymax <- "x"
+    }
   }
   else {
     ymax <- NA
   }
 
-  maxf <- optim(c(xmax/2,ymax/2),f,control = list(fnscale = -1)) # finds the maximum of the pdf
-  maxf <- maxf$value + .1
-  samples <- matrix(rep(0,2*N), nrow = N, ncol = 2) # creating a matrix to store the samples in
-  i <- 0
-  while( i < N) { # while loop that runs unil N accepted samples are found.
-    psx <- runif(1,xmin,xmax) # creating a potential x value to be tested
-    psy <- runif(1,ymin,ymax) # creating a potential y value to be tested
-    testsamp <- runif(1,0, maxf) # creating a test sample using maxf$value to find the max of the pdf and adding .1 to account for errors in tolerance.
-    if (testsamp < f(c(psx,psy))) { # tests if the potential x and y values should be rejected. If kept, the x value is stored in the first column and the y value in the second of the samples matrix.
-      samples[i+1,1] <- psx
-      samples[i+1,2] <- psy
-      i <- i +1
+  if (xmin == "y") {
+    xmin <- ymin
+  }
+  if (xmax == "y") {
+    xmax <- ymax
+  }
+  if (ymin == "x") {
+    ymin <- xmin
+  }
+  if (ymax == "x") {
+    ymax <- xmax
+  }
+
+  if (!is.na(xmin) & !is.na(xmax)) {
+    if ( length(xmins) == length(xmaxpos) ) {
+      if ( length(xmaxs) == 1 ) {
+        if ( xmaxs[1] == xmins[1] ) {
+          xmax <- NA
+          xmin <- NA
+        }
+        else {
+          xmax <- max(xmaxs)
+          xmin <- min(xmins)
+        }
+      }
+      else {
+        xmax <- max(xmaxs)
+        xmin <- min(xmins)
+      }
+    }
+    else {
+      if (length(xmaxs) < length(xmins)) {
+        xmax <- NA
+        xmin <- min(xmins)
+      }
+      else {
+        xmax <- max(xmaxs)
+        xmin <- NA
+      }
+    }
+  }
+
+  if (!is.na(ymin) & !is.na(ymax)) {
+    if ( length(ymins) == length(ymaxpos) ) {
+      if ( length(ymaxs) == 1 ) {
+        if ( ymaxs[1] == ymins[1] ) {
+          ymax <- NA
+          ymin <- NA
+        }
+        else {
+          ymax <- max(ymaxs)
+          ymin <- min(ymins)
+        }
+      }
+      else {
+        ymax <- max(ymaxs)
+        ymin <- min(ymins)
+      }
+    }
+    else {
+      if (length(ymaxs) < length(ymins)) {
+        ymax <- NA
+        ymin <- min(ymins)
+      }
+      else {
+        ymax <- max(ymaxs)
+        ymin <- NA
+      }
+    }
+  }
+
+  if (!is.na(xmin) & !is.na(xmax) & !is.na(ymin) & !is.na(ymax)) {
+    maxf <- optim(c(xmax/4,ymax/4),f,control = list(fnscale = -1)) # finds the maximum of the pdf
+    maxf <- maxf$value + .1
+    samples <- matrix(rep(0,2*N), nrow = N, ncol = 2) # creating a matrix to store the samples in
+    i <- 0
+    while( i < N) { # while loop that runs unil N accepted samples are found.
+      psx <- runif(1,xmin,xmax) # creating a potential x value to be tested
+      psy <- runif(1,ymin,ymax) # creating a potential y value to be tested
+      testsamp <- runif(1,0, maxf) # creating a test sample using maxf$value to find the max of the pdf and adding .1 to account for errors in tolerance.
+      if (testsamp < f(c(psx,psy))) { # tests if the potential x and y values should be rejected. If kept, the x value is stored in the first column and the y value in the second of the samples matrix.
+        samples[i+1,1] <- psx
+        samples[i+1,2] <- psy
+        i <- i +1
+      }
     }
   }
   samples # outputs the samples matrix.

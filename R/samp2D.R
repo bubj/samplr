@@ -65,9 +65,9 @@ samp2D <- function(f,N) {
   xmins <- rep(0,length(xminpos))
   if (length(xmins) != 0) {
     for (j in 1:length(xmins)) {
-      xmins[j] <- as.numeric(gsub('[^0-9//-//.]',"",substr(text,xminpos[j]-5,xminpos[j]+5)))
+      xmins[j] <- as.numeric(gsub('[^0-9//-//.//y]',"",substr(text,xminpos[j]-5,xminpos[j]+5)))
     }
-    xmin <- min(xmins)
+    xmin <- min(xmins[which(!is.na(xmins))])
   }
   else {
     xmin <- NA
@@ -99,9 +99,9 @@ samp2D <- function(f,N) {
   xmaxs <- rep(0,length(xmaxpos))
   if (length(xmaxs) != 0) {
     for (j in 1:length(xmaxs)) {
-      xmaxs[j] <- as.numeric(gsub('[^0-9//-//.]',"",substr(text,xmaxpos[j]-5,xmaxpos[j]+5)))
+      xmaxs[j] <- as.numeric(gsub('[^0-9//-//.//y]',"",substr(text,xmaxpos[j]-5,xmaxpos[j]+5)))
     }
-    xmax <- max(xmaxs)
+    xmax <- max(xmaxs[which(!is.na(xmaxs))])
   }
   else {
     xmax <- NA
@@ -133,9 +133,9 @@ samp2D <- function(f,N) {
   ymins <- rep(0,length(yminpos))
   if (length(ymins) != 0) {
     for (j in 1:length(ymins)) {
-      ymins[j] <- as.numeric(gsub('[^0-9//-//.]',"",substr(text,yminpos[j]-5,yminpos[j]+5)))
+      ymins[j] <- as.numeric(gsub('[^0-9//-//.//x]',"",substr(text,yminpos[j]-5,yminpos[j]+5)))
     }
-    ymin <- min(ymins)
+    ymin <- min(ymins[which(!is.na(ymins))])
   }
   else {
     ymin <- NA
@@ -167,9 +167,9 @@ samp2D <- function(f,N) {
   ymaxs <- rep(0,length(ymaxpos))
   if (length(ymaxs) != 0){
     for (j in 1:length(ymaxs)) {
-      ymaxs[j] <- as.numeric(gsub('[^0-9//-//.]',"",substr(text,ymaxpos[j]-5,ymaxpos[j]+5)))
+      ymaxs[j] <- as.numeric(gsub('[^0-9//-//.//x]',"",substr(text,ymaxpos[j]-5,ymaxpos[j]+5)))
     }
-    ymax <- max(ymaxs)
+    ymax <- max(ymaxs[which(!is.na(ymaxs))])
   }
   else {
     ymax <- NA

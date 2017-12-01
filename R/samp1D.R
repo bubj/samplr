@@ -51,8 +51,8 @@ samp1D <- function(f,N) {
   if (length(leftboundpos) != 0) {
     for (j in 1:length(leftboundpos)) {
       leftbounds[j] <- as.numeric(gsub("[^0-9\\-\\.]","",(substr(text,leftboundpos[j]-6,leftboundpos[j]+6))))
-      leftbound <- min(leftbounds)
     }
+    leftbound <- min(leftbounds)
   }
   else {
     leftbound <- NA
@@ -85,16 +85,15 @@ samp1D <- function(f,N) {
   if (length(rightboundpos) != 0) {
     for (j in 1:length(rightboundpos)) {
       rightbounds[j] <- as.numeric(gsub("[^0-9\\-\\.]","",(substr(text,rightboundpos[j]-6,rightboundpos[j]+6))))
-      rightbound <- max(rightbounds)
     }
-
+    rightbound <- max(rightbounds)
   }
   else {
     rightbound <- NA
   }
 
   if (!is.na(rightbound) & !is.na(leftbound)) {
-    if ( length(rightbounds) == length(leftboundpos) ) {
+    if ( length(rightbounds) == length(leftbounds) ) {
       if ( length(rightbounds) == 1 ) {
         if ( rightbounds[1] == leftbounds[1] ) {
           rightbound <- NA

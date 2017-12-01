@@ -65,14 +65,9 @@ samp2D <- function(f,N) {
   xmins <- rep(0,length(xminpos))
   if (length(xmins) != 0) {
     for (j in 1:length(xmins)) {
-      xmins[j] <- as.numeric(gsub('[^0-9//-//.//y]',"",substr(text,xminpos[j]-5,xminpos[j]+5)))
+      xmins[j] <- as.numeric(gsub('[^0-9//-//.]',"",substr(text,xminpos[j]-5,xminpos[j]+5)))
     }
-    if (is.numeric(xmins) == TRUE) {
-      xmin <- min(xmins[which(!is.na(xmins))])
-    }
-    else {
-      xmin <- "y"
-    }
+    xmin <- min(xmins[which(!is.na(xmins))])
   }
   else {
     xmin <- NA
@@ -104,14 +99,9 @@ samp2D <- function(f,N) {
   xmaxs <- rep(0,length(xmaxpos))
   if (length(xmaxs) != 0) {
     for (j in 1:length(xmaxs)) {
-      xmaxs[j] <- as.numeric(gsub('[^0-9//-//.//y]',"",substr(text,xmaxpos[j]-5,xmaxpos[j]+5)))
+      xmaxs[j] <- as.numeric(gsub('[^0-9//-//.]',"",substr(text,xmaxpos[j]-5,xmaxpos[j]+5)))
     }
-    if (is.numeric(xmaxs) == TRUE) {
-      xmax <- max(xmaxs[which(!is.na(xmaxs))])
-    }
-    else {
-      xmax <- "y"
-    }
+    xmax <- max(xmaxs[which(!is.na(xmaxs))])
   }
   else {
     xmax <- NA
@@ -143,14 +133,9 @@ samp2D <- function(f,N) {
   ymins <- rep(0,length(yminpos))
   if (length(ymins) != 0) {
     for (j in 1:length(ymins)) {
-      ymins[j] <- as.numeric(gsub('[^0-9//-//.//x]',"",substr(text,yminpos[j]-5,yminpos[j]+5)))
+      ymins[j] <- as.numeric(gsub('[^0-9//-//.]',"",substr(text,yminpos[j]-5,yminpos[j]+5)))
     }
-    if (is.numeric(ymins) == TRUE){
-      ymin <- min(ymins[which(!is.na(ymins))])
-    }
-    else {
-      ymin <- "x"
-    }
+    ymin <- min(ymins[which(!is.na(ymins))])
   }
   else {
     ymin <- NA
@@ -182,94 +167,76 @@ samp2D <- function(f,N) {
   ymaxs <- rep(0,length(ymaxpos))
   if (length(ymaxs) != 0){
     for (j in 1:length(ymaxs)) {
-      ymaxs[j] <- as.numeric(gsub('[^0-9//-//.//x]',"",substr(text,ymaxpos[j]-5,ymaxpos[j]+5)))
+      ymaxs[j] <- as.numeric(gsub('[^0-9//-//.]',"",substr(text,ymaxpos[j]-5,ymaxpos[j]+5)))
     }
-    if (is.numeric(ymaxs) == TRUE) {
-      ymax <- max(ymaxs[which(!is.na(ymaxs))])
-    }
-    else {
-      ymax <- "x"
-    }
+    ymax <- max(ymaxs[which(!is.na(ymaxs))])
   }
   else {
     ymax <- NA
   }
 
-  if (xmin == "y") {
-    xmin <- ymin
-  }
-  if (xmax == "y") {
-    xmax <- ymax
-  }
-  if (ymin == "x") {
-    ymin <- xmin
-  }
-  if (ymax == "x") {
-    ymax <- xmax
-  }
+  # if (!is.na(xmin) & !is.na(xmax)) {
+  #   if ( length(xmins) == length(xmaxs) ) {
+  #     if ( length(xmins) == 1 ) {
+  #       if ( xmins[1] == xmaxs[1] ) {
+  #         xmin <- NA
+  #         xmax <- NA
+  #       }
+  #       else {
+  #         xmin <- max(xmins)
+  #         xmax <- min(xmaxs)
+  #       }
+  #     }
+  #     else {
+  #       xmin <- max(xmins)
+  #       xmax <- min(xmaxs)
+  #     }
+  #   }
+  #   else {
+  #     if (length(xmins) < length(xmaxs)) {
+  #       xmin <- NA
+  #       xmax <- min(xmaxs)
+  #     }
+  #     else {
+  #       xmin <- max(xmins)
+  #       xmax <- NA
+  #     }
+  #   }
+  # }
+  #
+  # if (!is.na(ymin) & !is.na(ymax)) {
+  #   if ( length(ymins) == length(ymaxs) ) {
+  #     if ( length(ymins) == 1 ) {
+  #       if ( ymins[1] == ymaxs[1] ) {
+  #         ymin <- NA
+  #         ymax <- NA
+  #       }
+  #       else {
+  #         ymin <- max(ymins)
+  #         ymax <- min(ymaxs)
+  #       }
+  #     }
+  #     else {
+  #       ymin <- max(ymins)
+  #       ymax <- min(ymaxs)
+  #     }
+  #   }
+  #   else {
+  #     if (length(ymins) < length(ymaxs)) {
+  #       ymin <- NA
+  #       ymax <- min(ymaxs)
+  #     }
+  #     else {
+  #       ymin <- max(ymins)
+  #       ymax <- NA
+  #     }
+  #   }
+  # }
 
-  if (!is.na(xmin) & !is.na(xmax)) {
-    if ( length(xmins) == length(xmaxpos) ) {
-      if ( length(xmaxs) == 1 ) {
-        if ( xmaxs[1] == xmins[1] ) {
-          xmax <- NA
-          xmin <- NA
-        }
-        else {
-          xmax <- max(xmaxs)
-          xmin <- min(xmins)
-        }
-      }
-      else {
-        xmax <- max(xmaxs)
-        xmin <- min(xmins)
-      }
-    }
-    else {
-      if (length(xmaxs) < length(xmins)) {
-        xmax <- NA
-        xmin <- min(xmins)
-      }
-      else {
-        xmax <- max(xmaxs)
-        xmin <- NA
-      }
-    }
-  }
-
-  if (!is.na(ymin) & !is.na(ymax)) {
-    if ( length(ymins) == length(ymaxpos) ) {
-      if ( length(ymaxs) == 1 ) {
-        if ( ymaxs[1] == ymins[1] ) {
-          ymax <- NA
-          ymin <- NA
-        }
-        else {
-          ymax <- max(ymaxs)
-          ymin <- min(ymins)
-        }
-      }
-      else {
-        ymax <- max(ymaxs)
-        ymin <- min(ymins)
-      }
-    }
-    else {
-      if (length(ymaxs) < length(ymins)) {
-        ymax <- NA
-        ymin <- min(ymins)
-      }
-      else {
-        ymax <- max(ymaxs)
-        ymin <- NA
-      }
-    }
-  }
-
+  samples <- matrix(rep(0,2*N), nrow = N, ncol = 2) # creating a matrix to store the samples in
   if (!is.na(xmin) & !is.na(xmax) & !is.na(ymin) & !is.na(ymax)) {
     maxf <- optim(c(xmax/4,ymax/4),f,control = list(fnscale = -1)) # finds the maximum of the pdf
     maxf <- maxf$value + .1
-    samples <- matrix(rep(0,2*N), nrow = N, ncol = 2) # creating a matrix to store the samples in
     i <- 0
     while( i < N) { # while loop that runs unil N accepted samples are found.
       psx <- runif(1,xmin,xmax) # creating a potential x value to be tested
@@ -279,6 +246,50 @@ samp2D <- function(f,N) {
         samples[i+1,1] <- psx
         samples[i+1,2] <- psy
         i <- i +1
+      }
+    }
+  }
+  else {
+    k <- 1
+    maxfvalues <- rep(0,6561)
+    maxs <- matrix(rep(0,6561*2),ncol = 2, byrow = TRUE)
+    for (j in seq(-10,10,.25)) {
+      for (i in seq(-10,10,.25)) {
+        value <- optim(c(j,i),f,control = list(fnscale = -1))
+        maxfvalues[k] <- value$value
+        maxs[k,] <- value$par
+        k <- k + 1
+      }
+    }
+    maxf <- max(maxfvalues)
+    mean <- maxs[which(maxfvalues == maxf),]
+    if (sum(dim(mean))>2) {
+      mean <- mean[1,]
+    }
+    check <- rep(0,6561)
+    while (sum(check) != 6561) {
+      check <- rep(0,6561)
+      k <- 1
+      for (j in seq(-10,10,.25)) {
+        for (i in seq(-10,10,.25)) {
+         if (maxf^2*dnorm(i,mean[1],5)*dnorm(j,mean[2],5) >= f(c(i,j))) {
+           check[k] <- 1
+         }
+          k <- k + 1
+        }
+      }
+      maxf <- maxf + 1
+    }
+    maxf <- maxf - 1
+    i <- 0
+    while (i < N) {
+      psx <- rnorm(1,mean[1],5)
+      psy <- rnorm(1,mean[2],5)
+      testsamp <- runif(1,0,maxf^2*dnorm(psx,mean[1],5)*dnorm(psy,mean[2],5))
+      if (testsamp < f(c(psx,psy))) {
+        samples[i+1,1] <- psx
+        samples[i+1,2] <- psy
+        i <- i + 1
       }
     }
   }

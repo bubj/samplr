@@ -175,64 +175,6 @@ samp2D <- function(f,N) {
     ymax <- NA
   }
 
-  # if (!is.na(xmin) & !is.na(xmax)) {
-  #   if ( length(xmins) == length(xmaxs) ) {
-  #     if ( length(xmins) == 1 ) {
-  #       if ( xmins[1] == xmaxs[1] ) {
-  #         xmin <- NA
-  #         xmax <- NA
-  #       }
-  #       else {
-  #         xmin <- max(xmins)
-  #         xmax <- min(xmaxs)
-  #       }
-  #     }
-  #     else {
-  #       xmin <- max(xmins)
-  #       xmax <- min(xmaxs)
-  #     }
-  #   }
-  #   else {
-  #     if (length(xmins) < length(xmaxs)) {
-  #       xmin <- NA
-  #       xmax <- min(xmaxs)
-  #     }
-  #     else {
-  #       xmin <- max(xmins)
-  #       xmax <- NA
-  #     }
-  #   }
-  # }
-  #
-  # if (!is.na(ymin) & !is.na(ymax)) {
-  #   if ( length(ymins) == length(ymaxs) ) {
-  #     if ( length(ymins) == 1 ) {
-  #       if ( ymins[1] == ymaxs[1] ) {
-  #         ymin <- NA
-  #         ymax <- NA
-  #       }
-  #       else {
-  #         ymin <- max(ymins)
-  #         ymax <- min(ymaxs)
-  #       }
-  #     }
-  #     else {
-  #       ymin <- max(ymins)
-  #       ymax <- min(ymaxs)
-  #     }
-  #   }
-  #   else {
-  #     if (length(ymins) < length(ymaxs)) {
-  #       ymin <- NA
-  #       ymax <- min(ymaxs)
-  #     }
-  #     else {
-  #       ymin <- max(ymins)
-  #       ymax <- NA
-  #     }
-  #   }
-  # }
-
   samples <- matrix(rep(0,2*N), nrow = N, ncol = 2) # creating a matrix to store the samples in
   if (!is.na(xmin) & !is.na(xmax) & !is.na(ymin) & !is.na(ymax)) {
     maxf <- optim(c(xmax/4,ymax/4),f,control = list(fnscale = -1)) # finds the maximum of the pdf

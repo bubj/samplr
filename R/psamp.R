@@ -56,7 +56,8 @@ psamp <- function(f, q, g = NULL) {
   if (is.null(g)) {
     samples <- samp1D(f,10000)
     mean(samples < q)
-  } else {
+  }
+  else {
     samples <- samp2D(f,10000)
     values <- rep(0,10000)
     for ( i in 1:10000) {

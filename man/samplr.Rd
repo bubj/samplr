@@ -4,42 +4,75 @@
 \alias{samplr}
 \title{Single and Two Variable Rejection Sampler}
 \usage{
-samplr(fun, a, b, N, c = NULL, d = NULL)
+samplr(f, N, twod = FALSE)
 }
 \arguments{
-\item{fun}{The pdf that we are sampling from, input as a string. For one variable, the input variable must be declared as `x`. For two variables, the input variables must be declared as `x` and `y`.}
+\item{f}{The pdf that we are sampling from, input as a predefined function. For one variable, the input variable must be declared as \code{x}. For two variables, the parameter of the function must be a vector containing the variables \code{x} and \code{y}.}
 
-\item{a}{The lower bound of the variable `x` in the pdf.}
+\item{N}{The number of samples returned by the rejection sampler.}
 
-\item{b}{The upper bound of the variable `x` in the pdf.}
-
-\item{N}{The number of samples output by the rejection sampler.}
-
-\item{c}{The lower bound of the variable `y` in the pdf.}
-
-\item{d}{The upper bound of the variable `y` in the pdf.}
+\item{twod}{Specification if the input pdf is two dimensional if \code{TRUE}. Default is \code{FALSE}, meaning that the input function is one dimensional.}
 }
 \value{
 If using a single variable, the output is a vector containing the samples. If two variables, the output is a matrix with N rows and 2 columns containing the samples.
 }
 \description{
-This function implements both one and two variable rejection sampling for rvs with bounded support and which have bounded pdf.
+This function implements both one and two variable rejection sampling for probability density functions which are bounded, but the support does not need to be bounded.
 }
 \examples{
 
 Single variable
 
-samps <- samplr("2*x", 0, 1, 10000)
-hist(samps)
+f <- function(x) {
+  ifelse(0 < x & x < 1, 2*x, 0)
+}
+hist(samplr(f,10000))
 
-Two variable
+g <- function(x) {
+  ifelse(0 < x & x < 2, 1/2*x, 0)
+}
+hist(samplr(g,10000))
 
-requires(ggplot2)
+h <- function(x) {
+  ifelse(0 < x & x < 6.2832, 1/2/pi*(sin(x) + 1), 0)
+}
+hist(samplr(h,10000))
 
-samps <- samplr("x+y",a = 0,b = 1,c = 0,d = 1,N = 10000)
-samps <- data.frame(samps)
+u <- function(x) {
+  ifelse(x < 0, 1/2*exp(x), 1/2*exp(-x))
+}
+hist(samplr(u,10000))
+
+Two dimensional (requires \\code{ggplot2})
+
+v <- function(z) {
+  x <- z[1]
+  y <- z[2]
+  ifelse(0 <= x & x <= 1 & 0 <= y & y <= 1, x + y, 0)
+}
+samps <- data.frame(samplr(v, 10000, twod = TRUE))
 colnames(samps) <- c("x","y")
 ggplot(samps, aes(x, y)) +
-    geom_density_2d()
+  geom_density_2d()
+
+w <- function(z) {
+  x <- z[1]
+  y <- z[2]
+  ifelse(0 <= x & x <= 1 & 0 <= y & y <= 1 & 0 <= x + y & x + y <= 1, 24*x*y,0)
+}
+samps <- data.frame(samplr(w, 10000, twod = TRUE))
+colnames(samps) <- c("x","y")
+ggplot(samps, aes(x, y)) +
+  geom_density_2d()
+
+l <- function(z) {
+  x <- z[1]
+  y <- z[2]
+  ifelse(0 < x & 0 < y, exp(-x)*exp(-y), 0)
+}
+samps <- data.frame(samplr(l, 10000, twod = TRUE))
+colnames(samps) <- c("x","y")
+ggplot(samps, aes(x, y)) +
+  geom_density_2d()
 
 }

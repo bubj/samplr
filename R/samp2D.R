@@ -1,18 +1,10 @@
 #' Two Variable Rejection Sampler
 #'
-#' This function implements two variable rejection sampling for rvs with bounded support and which have bounded pdf.
+#' This function implements two variable rejection sampling for joint density functions that are bounded. The support does not need to be bounded.
 #'
-#' @param fun The pdf that we are sampling from, input as a string. The two variables sampled from must be input using the variables "x" and "y".
+#' @param f The pdf that we are sampling from, input as a predefined function. The two variables sampled from must be input using the variables \code{x} and \code{y{}, with the parameter of \code{f} is a vector containing the two parameters and the output is a single value.
 #'
-#' @param a The lower bound of the variable "x" in the pdf.
-#'
-#' @param b The upper bound of the variable "x" in the pdf.
-#'
-#' @param c The lower bound of the variable "y" in the pdf.
-#'
-#' @param d The upper bound of the variable "y" in the pdf.
-#'
-#' @param N the number of samples output by the sampling function
+#' @param N The number of samples output by the sampling function.
 #'
 #' @return A matrix with N rows and 2 columns containing the samples from the pdf.
 #' @export
@@ -20,15 +12,34 @@
 #' @examples
 #'
 #' f <- function(z) {
-#'  x <- z[1]
-#'  y <- z[2]
-#'  ifelse(0 <= x & x <= 1 & 0 <= y & y <= 1, x + y, 0)
+#'   x <- z[1]
+#'   y <- z[2]
+#'   ifelse(0 <= x & x <= 1 & 0 <= y & y <= 1, x + y, 0)
 #' }
-#' samps <- samp2D(f, 10000)
-#' samps <- data.frame(samps)
+#' samps <- data.frame(samp2D(f, 10000))
 #' colnames(samps) <- c("x","y")
 #' ggplot(samps, aes(x, y)) +
-#'  geom_density_2d()
+#'   geom_density_2d()
+#'
+#' f <- function(z) {
+#'   x <- z[1]
+#'   y <- z[2]
+#'   ifelse(0 <= x & x <= 1 & 0 <= y & y <= 1 & 0 <= x + y & x + y <= 1, 24*x*y,0)
+#' }
+#' samps <- data.frame(samp2D(f,10000))
+#' colnames(samps) <- c("x","y")
+#' ggplot(samps, aes(x, y)) +
+#'   geom_density_2d()
+#'
+#' f <- function(z) {
+#'   x <- z[1]
+#'   y <- z[2]
+#'   ifelse(0 < x & 0 < y, exp(-x)*exp(-y), 0)
+#' }
+#' samps <- data.frame(samp2D(f,10000))
+#' colnames(samps) <- c("x","y")
+#' ggplot(samps, aes(x, y)) +
+#'   geom_density_2d()
 #'
 
 

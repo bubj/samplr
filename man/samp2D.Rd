@@ -4,9 +4,11 @@
 \alias{samp2D}
 \title{Two Variable Rejection Sampler}
 \usage{
-samp2D(fun, a, b, c, d, N)
+samp2D(f, N)
 }
 \arguments{
+\item{N}{the number of samples output by the sampling function}
+
 \item{fun}{The pdf that we are sampling from, input as a string. The two variables sampled from must be input using the variables "x" and "y".}
 
 \item{a}{The lower bound of the variable "x" in the pdf.}
@@ -16,8 +18,6 @@ samp2D(fun, a, b, c, d, N)
 \item{c}{The lower bound of the variable "y" in the pdf.}
 
 \item{d}{The upper bound of the variable "y" in the pdf.}
-
-\item{N}{the number of samples output by the sampling function}
 }
 \value{
 A matrix with N rows and 2 columns containing the samples from the pdf.
@@ -27,10 +27,34 @@ This function implements two variable rejection sampling for rvs with bounded su
 }
 \examples{
 
-samps <- samp2D("x + y", 0, 1, 0, 1, 10000)
-samps <- data.frame(samps)
+f <- function(z) {
+  x <- z[1]
+  y <- z[2]
+  ifelse(0 <= x & x <= 1 & 0 <= y & y <= 1, x + y, 0)
+}
+samps <- data.frame(samp2D(f, 10000))
 colnames(samps) <- c("x","y")
 ggplot(samps, aes(x, y)) +
-    geom_density_2d()
+  geom_density_2d()
+
+f <- function(z) {
+  x <- z[1]
+  y <- z[2]
+  ifelse(0 <= x & x <= 1 & 0 <= y & y <= 1 & 0 <= x + y & x + y <= 1, 24*x*y,0)
+}
+samps <- data.frame(samp2D(f,10000))
+colnames(samps) <- c("x","y")
+ggplot(samps, aes(x, y)) +
+  geom_density_2d()
+
+f <- function(z) {
+  x <- z[1]
+  y <- z[2]
+  ifelse(0 < x & 0 < y, exp(-x)*exp(-y), 0)
+}
+samps <- data.frame(samp2D(f,10000))
+colnames(samps) <- c("x","y")
+ggplot(samps, aes(x, y)) +
+  geom_density_2d()
 
 }

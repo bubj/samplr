@@ -1,23 +1,36 @@
 #' Single Variable Rejection Sampler
 #'
-#' This function implements single variable rejection sampling for rvs with bounded support and which have bounded pdf.
+#' This function implements single variable rejection sampling for probability density functions which are bounded. The support does not need to be bounded.
 #'
-#'
-#' @param fun The pdf that we are sampling from, input as a string. The variable sampled from must be input using the variable "x".
-#'
-#' @param a The lower bound of the pdf.
-#'
-#' @param b The upper bound of the pdf.
+#' @param fun The pdf that we are sampling from, input as a predefined function of \code{x}. For bounded support, the bounds must be input as a decimal.
 #'
 #' @param N The number of samples output by the sampling function.
 #'
 #' @return A vector containing the samples from the pdf.
+#'
 #' @export
 #'
 #' @examples
 #'
-#' hist(samp1D("2*x", 0, 1, 10000))
+#' f <- function(x) {
+#'   ifelse(0 < x & x < 1, 2*x, 0)
+#' }
+#' hist(samp1D(f,10000))
 #'
+#' f <- function(x) {
+#'   ifelse(0 < x & x < 2, 1/2*x, 0)
+#' }
+#' hist(samp1D(f,10000))
+#'
+#' f <- function(x) {
+#'   ifelse(0 < x & x < 6.2832, 1/2/pi*(sin(x) + 1), 0)
+#' }
+#' hist(samp1D(f,10000))
+#'
+#' f <- function(x) {
+#'   ifelse(x < 0, 1/2*exp(x), 1/2*exp(-x))
+#' }
+#' hist(samp1D(f,10000))
 
 samp1D <- function(f,N) {
   text <- toString(body(f)) # convert body of the function to a string

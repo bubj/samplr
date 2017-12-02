@@ -4,16 +4,12 @@
 \alias{samp1D}
 \title{Single Variable Rejection Sampler}
 \usage{
-samp1D(fun, a, b, N)
+samp1D(f, N)
 }
 \arguments{
-\item{fun}{The pdf that we are sampling from, input as a string. The variable sampled from must be input using the variable "x".}
-
-\item{a}{The lower bound of the pdf.}
-
-\item{b}{The upper bound of the pdf.}
-
 \item{N}{The number of samples output by the sampling function.}
+
+\item{fun}{The pdf that we are sampling from, input as a predefined function of \code{x}. For bounded support, the bounds must be input as a decimal.}
 }
 \value{
 A vector containing the samples from the pdf.
@@ -23,6 +19,23 @@ This function implements single variable rejection sampling for rvs with bounded
 }
 \examples{
 
-hist(samp1D("2*x", 0, 1, 10000))
+f <- function(x) {
+  ifelse(0 < x & x < 1, 2*x, 0)
+}
+hist(samp1D(f,10000))
 
+f <- function(x) {
+  ifelse(0 < x & x < 2, 1/2*x, 0)
+}
+hist(samp1D(f,10000))
+
+f <- function(x) {
+  ifelse(0 < x & x < 6.2832, 1/2/pi*(sin(x) + 1), 0)
+}
+hist(samp1D(f,10000))
+
+f <- function(x) {
+  ifelse(x < 0, 1/2*exp(x), 1/2*exp(-x))
+}
+hist(samp1D(f,10000))
 }

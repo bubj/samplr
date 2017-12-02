@@ -7,23 +7,13 @@
 samp2D(f, N)
 }
 \arguments{
-\item{N}{the number of samples output by the sampling function}
-
-\item{fun}{The pdf that we are sampling from, input as a string. The two variables sampled from must be input using the variables "x" and "y".}
-
-\item{a}{The lower bound of the variable "x" in the pdf.}
-
-\item{b}{The upper bound of the variable "x" in the pdf.}
-
-\item{c}{The lower bound of the variable "y" in the pdf.}
-
-\item{d}{The upper bound of the variable "y" in the pdf.}
+\item{N}{The number of samples output by the sampling function.}
 }
 \value{
 A matrix with N rows and 2 columns containing the samples from the pdf.
 }
 \description{
-This function implements two variable rejection sampling for rvs with bounded support and which have bounded pdf.
+This function implements two variable rejection sampling for joint density functions that are bounded. The support does not need to be bounded.
 }
 \examples{
 

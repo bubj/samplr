@@ -15,7 +15,7 @@ samp1D(f, N)
 A vector containing the samples from the pdf.
 }
 \description{
-This function implements single variable rejection sampling for rvs with bounded support and which have bounded pdf.
+This function implements single variable rejection sampling for probability density functions which are bounded. The support does not need to be bounded.
 }
 \examples{
 

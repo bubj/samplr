@@ -2,7 +2,7 @@
 #'
 #' This function implements two variable rejection sampling for joint density functions that are bounded. The support does not need to be bounded.
 #'
-#' @param f The pdf that we are sampling from, input as a predefined function. The two variables sampled from must be input using the variables \code{x} and \code{y{}, with the parameter of \code{f} is a vector containing the two parameters and the output is a single value.
+#' @param f The pdf that we are sampling from, input as a predefined function. The two variables sampled from must be input using the variables \code{x} and \code{y}, with the parameter of \code{f} is a vector containing the two parameters and the output is a single value.
 #'
 #' @param N The number of samples output by the sampling function.
 #'

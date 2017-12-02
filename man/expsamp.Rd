@@ -18,9 +18,9 @@ For one dimensional pdfs the ouput is \code{E[X]} and for two dimensional pdfs t
 This function implements one and two variable rejection sampling to find expected values for one and two dimensional pdfs.
 }
 \details{
-For one dimensional variables, this function uses \code{samp1D} to find \code{E[X]}
+For one dimensional variables, this function uses \code{samplr} to find \code{E[X]}
 
-For two dimensional random variables, this function uses \code{samp2D} to find \code{E[g(X,Y)]}, where \code{X} and \code{Y} are found using \code{samp2D(f,10000)}.
+For two dimensional random variables, this function uses \code{samplr} to find \code{E[g(X,Y)]}, where \code{X} and \code{Y} are found using \code{samplr(f, 10000, twod = TRUE)}.
 }
 \examples{
 

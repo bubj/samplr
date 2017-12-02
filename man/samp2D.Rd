@@ -7,6 +7,8 @@
 samp2D(f, N)
 }
 \arguments{
+\item{f}{The pdf that we are sampling from, input as a predefined function. The two variables sampled from must be input using the variables \code{x} and \code{y}, with the parameter of \code{f} is a vector containing the two parameters and the output is a single value.}
+
 \item{N}{The number of samples output by the sampling function.}
 }
 \value{

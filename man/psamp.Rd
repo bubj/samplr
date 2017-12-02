@@ -20,11 +20,11 @@ A number between 0 and 1 associated with the distribution function.
 This function implements one and two variable rejection sampling to find probabilities.
 }
 \details{
-This function is in an implimentation of a distribution function for single and two variable pdfs using the \code{samp1D} and \code{samp2D} rejection samplers.
+This function is in an implimentation of a distribution function for single and two variable pdfs using the \code{samplr} rejection sampler.
 
-For one dimensional variables, this function uses \code{samp1D} to find \code{P(X < q)}.
+For one dimensional variables, this function uses \code{samplr} to find \code{P(X < q)}.
 
-For two dimensional random variables, this function uses \code{samp2D} to find \code{P(g(X,Y) < q)}, where \code{X} and \code{Y} are found using \code{samp2D(f,10000)}.
+For two dimensional random variables, this function uses \code{samplr} to find \code{P(g(X,Y) < q)}, where \code{X} and \code{Y} are found using \code{samplr(f, 10000, twod = TRUE)}.
 }
 \examples{
 

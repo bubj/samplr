@@ -2,11 +2,11 @@
 #'
 #' This function implements one and two variable rejection sampling to find probabilities.
 #'
-#' This function is in an implimentation of a distribution function for single and two variable pdfs using the \code{samp1D} and \code{samp2D} rejection samplers.
+#' This function is in an implimentation of a distribution function for single and two variable pdfs using the \code{samplr} rejection sampler.
 #'
-#' For one dimensional variables, this function uses \code{samp1D} to find \code{P(X < q)}.
+#' For one dimensional variables, this function uses \code{samplr} to find \code{P(X < q)}.
 #'
-#' For two dimensional random variables, this function uses \code{samp2D} to find \code{P(g(X,Y) < q)}, where \code{X} and \code{Y} are found using \code{samp2D(f,10000)}.
+#' For two dimensional random variables, this function uses \code{samplr} to find \code{P(g(X,Y) < q)}, where \code{X} and \code{Y} are found using \code{samplr(f, 10000, twod = TRUE)}.
 #'
 #' @param f The pdf you wish to use to find the probability of. For 2D probability density functions, the argument must be a vector of the two parameters of the pdf.
 #'
@@ -54,11 +54,11 @@
 
 psamp <- function(f, q, g = NULL) {
   if (is.null(g)) {
-    samples <- samp1D(f,10000)
+    samples <- samplr(f,10000)
     mean(samples < q)
   }
   else {
-    samples <- samp2D(f,10000)
+    samples <- samplr(f,10000, twod = TRUE)
     values <- rep(0,10000)
     for ( i in 1:10000) {
       values[i] <- g(c(samples[i,1],samples[i,2]))

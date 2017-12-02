@@ -24,17 +24,17 @@
 #' f <- function(x) {
 #'   ifelse(0 < x & x < 1, 2*x, 0)
 #' }
-#' psamp(f,.5)
+#' psamplr(f,.5)
 #'
 #' f <- function(x) {
 #'   ifelse(0 < x & x < 2, 1/2*x, 0)
 #' }
-#' psamp(f,1)
+#' psamplr(f,1)
 #'
 #' f <- function(x) {
 #'   ifelse(0 < x & x < 6.2832, 1/2/pi*(sin(x) + 1), 0)
 #' }
-#' psamp(f,pi)
+#' psamplr(f,pi)
 #'
 #' Two dimensional
 #'
@@ -48,11 +48,11 @@
 #'   y <- z[2]
 #'   2*x + y
 #' }
-#' psamp(f,1,f)
-#' psamp(f,2,g)
+#' psamplr(f,1,f)
+#' psamplr(f,2,g)
 #'
 
-psamp <- function(f, q, g = NULL) {
+psamplr <- function(f, q, g = NULL) {
   if (is.null(g)) {
     samples <- samplr(f,10000)
     mean(samples < q)

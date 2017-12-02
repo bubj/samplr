@@ -20,17 +20,17 @@
 #' f <- function(x) {
 #'   ifelse(0 < x & x < 1, 2*x, 0)
 #' }
-#' expsamp(f)
+#' expsamplr(f)
 #'
 #' f <- function(x) {
 #'   ifelse(0 < x & x < 2, 1/2*x, 0)
 #' }
-#' expsamp(f)
+#' expsamplr(f)
 #'
 #' f <- function(x) {
 #'   ifelse(0 < x & x < 6.2832, 1/2/pi*(sin(x) + 1), 0)
 #' }
-#' expsamp(f)
+#' expsamplr(f)
 #'
 #' Two dimensional
 #'
@@ -44,12 +44,12 @@
 #'   y <- z[2]
 #'   x
 #' }
-#' expsamp(f,f)
-#' expsamp(f,g)
+#' expsamplr(f,f)
+#' expsamplr(f,g)
 #'
 
 
-expsamp <- function(f, g = NULL) {
+expsamplr <- function(f, g = NULL) {
   if (is.null(g)) {
     samples <- samplr(f,10000)
     mean(samples)

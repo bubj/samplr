@@ -69,7 +69,7 @@
 #'
 
 
-samplr <- function(f, N, twod = FALSE) {
+samplr <- function(N, f, twod = FALSE) {
   if (twod == FALSE) {
     text <- toString(body(f)) # convert body of the function to a string
     leftboundpos <- rep(0,10)
@@ -198,12 +198,14 @@ samplr <- function(f, N, twod = FALSE) {
       maxf <- max(maxfvalues)
       mean <- max(maxes[which(maxfvalues == maxf)])
 
-      check <- rep(0,101)
-      while (sum(check) != 101) {
-        check <- rep(0,101)
-        for (i in -50:50) {
-          if ( suppressWarnings(maxf*dt(i,1,mean)) >= f(i) ) {
-            check[i+51] <- 1
+      checks <- c(-10000000,-1000000,-100000,-10000,-1000,-500,-250,-100:100,250,500,1000,10000,100000,1000000,10000000)
+      check <- rep(0,length(checks))
+      while (sum(check) != length(check)) {
+        check <- rep(0,length(checks))
+        i <- 1
+        for (i in 1:length(check)) {
+          if ( suppressWarnings(maxf*dt(checks[i],1,mean)) >= f(checks[i]) ) {
+            check[i] <- 1
           }
         }
         maxf <- maxf + 1

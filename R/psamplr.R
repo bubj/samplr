@@ -63,6 +63,6 @@ psamplr <- function(f, q, g = NULL) {
     for ( i in 1:10000) {
       values[i] <- g(c(samples[i,1],samples[i,2]))
     }
-    mean(values < q) # change this
+    mean(values < q)
   }
 }

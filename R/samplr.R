@@ -188,12 +188,12 @@ samplr <- function(f, N, twod = FALSE) {
     }
 
     else {
-      maxfvalues <- rep(0,100)
-      maxes <- rep(0,100)
-      for (i in -50:49) {
+      maxfvalues <- rep(0,200)
+      maxes <- rep(0,200)
+      for (i in -100:99) {
         value <- optimize(f,c(i-.1,i+1.1),maximum = TRUE)
-        maxfvalues[i+51] <- value$objective
-        maxes[i+51] <- value$maximum
+        maxfvalues[i+101] <- value$objective
+        maxes[i+101] <- value$maximum
       }
       maxf <- max(maxfvalues)
       mean <- max(maxes[which(maxfvalues == maxf)])
@@ -202,7 +202,7 @@ samplr <- function(f, N, twod = FALSE) {
       while (sum(check) != 101) {
         check <- rep(0,101)
         for (i in -50:50) {
-          if ( maxf*dnorm(i,mean,5) >= f(i) ) {
+          if ( suppressWarnings(maxf*dt(i,1,mean)) >= f(i) ) {
             check[i+51] <- 1
           }
         }
@@ -212,8 +212,8 @@ samplr <- function(f, N, twod = FALSE) {
 
       i <- 0
       while (i < N){
-        potsamp <- rnorm(1,mean,5)
-        testsamp <- runif(1, 0, maxf*dnorm(potsamp,mean,5))
+        potsamp <- rt(1,1,mean)
+        testsamp <- runif(1, 0, suppressWarnings(maxf*dt(potsamp,1,mean)))
         if (testsamp < f(potsamp)) {
           samples[i+1] <- potsamp
           i <- i + 1

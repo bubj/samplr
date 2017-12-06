@@ -204,7 +204,7 @@ samplr <- function(N, f, twod = FALSE) {
         check <- rep(0,length(checks))
         i <- 1
         for (i in 1:length(check)) {
-          if ( suppressWarnings(maxf*dt(checks[i],1,mean)) >= f(checks[i]) ) {
+          if ( suppressWarnings(maxf*dt(checks[i],1,mean)) >= f(checks[i])) {
             check[i] <- 1
           }
         }
@@ -400,26 +400,32 @@ samplr <- function(N, f, twod = FALSE) {
       if (sum(dim(mean))>2) {
         mean <- mean[1,]
       }
-      check <- rep(0,6561)
-      while (sum(check) != 6561) {
-        check <- rep(0,6561)
-        k <- 1
-        for (j in seq(-10,10,.25)) {
-          for (i in seq(-10,10,.25)) {
-            if (maxf^2*dnorm(i,mean[1],5)*dnorm(j,mean[2],5) >= f(c(i,j))) {
-              check[k] <- 1
-            }
-            k <- k + 1
-          }
+
+      side <- c(-10000000,-1000000,-100000,-10000,-1000,-500,-250,seq(-100,100,5),250,500,1000,10000,100000,1000000,10000000)
+      checks <- matrix(rep(0,2*(length(side)^2)),ncol = 2)
+      k <- 1
+      for (i in 1:length(side)) {
+        for (j in 1:length(side)) {
+          checks[k,1] <- side[i]
+          checks[k,2] <- side[j]
+          k <- k + 1
+        }
+      }
+      check <- rep(0,dim(checks)[1])
+      while (sum(check) != length(check)) {
+        check <- rep(0,dim(checks)[1])
+        for (i in 1:length(check)) {
+          if (suppressWarnings(maxf*dt(checks[i,1],1,mean[1])*dt(checks[i,2],1,mean[2])) >= f(c(checks[i,1],checks[i,2])))
+            check[i] <- 1
         }
         maxf <- maxf + 1
       }
       maxf <- maxf - 1
       i <- 0
       while (i < N) {
-        psx <- rnorm(1,mean[1],5)
-        psy <- rnorm(1,mean[2],5)
-        testsamp <- runif(1,0,maxf^2*dnorm(psx,mean[1],5)*dnorm(psy,mean[2],5))
+        psx <- rt(1,1,mean[1])
+        psy <- rt(1,1,mean[2])
+        testsamp <- runif(1,0,suppressWarnings(maxf*dt(psx,1,mean[1])*dt(psy,1,mean[2])))
         if (testsamp < f(c(psx,psy))) {
           samples[i+1,1] <- psx
           samples[i+1,2] <- psy

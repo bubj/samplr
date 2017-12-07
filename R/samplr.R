@@ -384,20 +384,26 @@ samplr <- function(N, f, twod = FALSE) {
       }
     }
     else {
+      side <- seq(-20,20,.5)
+      maxpoints <- matrix(rep(0,2*(length(side)^2)),ncol = 2)
       k <- 1
-      maxfvalues <- rep(0,6561)
-      maxs <- matrix(rep(0,6561*2),ncol = 2, byrow = TRUE)
-      for (j in seq(-10,10,.25)) {
-        for (i in seq(-10,10,.25)) {
-          value <- optim(c(j,i),f,control = list(fnscale = -1))
-          maxfvalues[k] <- value$value
-          maxs[k,] <- value$par
+      for(i in 1:length(side)) {
+        for(j in 1:length(side)) {
+          maxpoints[k,1] <- side[i]
+          maxpoints[k,2] <- side[j]
           k <- k + 1
         }
       }
+      maxfvalues <- seq(0,length(side)^2-1)
+      maxes <- matrix(rep(0,2*(length(side)^2)),ncol = 2)
+      for (i in 1:length(maxfvalues)) {
+        value <- optim(c(maxpoints[i,1],maxpoints[i,2]),f,control = list(fnscale = -1))
+        maxfvalues[i] <- value$value
+        maxes[i,] <- value$par
+      }
       maxf <- max(maxfvalues)
-      mean <- maxs[which(maxfvalues == maxf),]
-      if (sum(dim(mean))>2) {
+      mean <- maxes[which(maxfvalues == maxf),]
+      if (dim(mean)[1] > 1) {
         mean <- mean[1,]
       }
 

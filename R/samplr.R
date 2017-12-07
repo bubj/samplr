@@ -366,6 +366,90 @@ samplr <- function(N, f, twod = FALSE) {
     else {
       ymax <- NA
     }
+    #print(xmins)
+    #print(xmaxs)
+    #print(ymins)
+    #print(ymaxs)
+
+    # if (!is.na(xmax) & !is.na(xmin)) {
+    #   if ( length(xmaxs) == length(xmins) ) {
+    #     if ( length(xmaxs) == 1 ) {
+    #       if ( xmaxs[1] == xmins[1] ) {
+    #         xmax <- NA
+    #         xmin <- NA
+    #       }
+    #       else {
+    #         xmax <- max(xmaxs)
+    #         xmin <- min(xmins)
+    #       }
+    #     }
+    #     else {
+    #       xmax <- max(xmaxs)
+    #       xmin <- min(xmins)
+    #     }
+    #   }
+    #   else {
+    #     if (length(xmaxs) < length(xmins)) {
+    #       xmax <- NA
+    #       xmin <- min(xmins)
+    #     }
+    #     else {
+    #       xmax <- max(xmaxs)
+    #       xmin <- NA
+    #     }
+    #   }
+    # }
+    #
+    # if (!is.na(ymax) & !is.na(ymin)) {
+    #   if ( length(ymaxs) == length(ymins) ) {
+    #     if ( length(ymaxs) == 1 ) {
+    #       if ( ymaxs[1] == ymins[1] ) {
+    #         ymax <- NA
+    #         ymin <- NA
+    #       }
+    #       else {
+    #         ymax <- max(ymaxs)
+    #         ymin <- min(ymins)
+    #       }
+    #     }
+    #     else {
+    #       ymax <- max(ymaxs)
+    #       ymin <- min(ymins)
+    #     }
+    #   }
+    #   else {
+    #     if (length(ymaxs) < length(ymins)) {
+    #       ymax <- NA
+    #       ymin <- min(ymins)
+    #     }
+    #     else {
+    #       ymax <- max(ymaxs)
+    #       ymin <- NA
+    #     }
+    #   }
+    # }
+    #print(c(xmin,xmax,ymin,ymax))
+    # if (length(xmins) != length(xmaxs)) {
+    #   xmin <- NA
+    #   xmax <- NA
+    # }
+    # if (length(ymins) != length(ymaxs)) {
+    #   ymin <- NA
+    #   ymax <- NA
+    # }
+    if (!is.na(xmin) & !is.na(xmax)) {
+      if (xmin == xmax) {
+        xmin <- NA
+        xmax <- NA
+      }
+    }
+    if (!is.na(ymin) & !is.na(ymax)) {
+      if (ymin == ymax) {
+        ymin <- NA
+        ymax <- NA
+      }
+    }
+    #print(c(xmin,xmax,ymin,ymax))
 
     samples <- matrix(rep(0,2*N), nrow = N, ncol = 2) # creating a matrix to store the samples in
     if (!is.na(xmin) & !is.na(xmax) & !is.na(ymin) & !is.na(ymax)) {
@@ -403,7 +487,10 @@ samplr <- function(N, f, twod = FALSE) {
       }
       maxf <- max(maxfvalues)
       mean <- maxes[which(maxfvalues == maxf),]
-      if (dim(mean)[1] > 1) {
+      #print(maxf)
+      #print(mean)
+      #print(dim(mean))
+      if (!is.null(dim(mean))) {
         mean <- mean[1,]
       }
 
@@ -425,8 +512,8 @@ samplr <- function(N, f, twod = FALSE) {
             check[i] <- 1
         }
         maxf <- maxf + 1
+        # print(maxf)
       }
-      maxf <- maxf - 1
       i <- 0
       while (i < N) {
         psx <- rt(1,1,mean[1])

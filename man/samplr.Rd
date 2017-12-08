@@ -4,12 +4,12 @@
 \alias{samplr}
 \title{Single and Two Variable Rejection Sampler}
 \usage{
-samplr(f, N, twod = FALSE)
+samplr(N, f, twod = FALSE)
 }
 \arguments{
-\item{f}{The pdf that we are sampling from, input as a predefined function. For one variable, the input variable must be declared as \code{x}. For two variables, the parameter of the function must be a vector containing the variables \code{x} and \code{y}.}
-
 \item{N}{The number of samples returned by the rejection sampler.}
+
+\item{f}{The pdf that we are sampling from, input as a predefined function. For one variable, the input variable must be declared as \code{x}. For two variables, the parameter of the function must be a vector containing the variables \code{x} and \code{y}.}
 
 \item{twod}{Specification if the input pdf is two dimensional if \code{TRUE}. Default is \code{FALSE}, meaning that the input function is one dimensional.}
 }

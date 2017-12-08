@@ -18,31 +18,31 @@
 #' f <- function(x) {
 #'   ifelse(0 < x & x < 1, 2*x, 0)
 #' }
-#' hist(samplr(f,10000))
+#' hist(samplr(10000,f))
 #'
 #' g <- function(x) {
 #'   ifelse(0 < x & x < 2, 1/2*x, 0)
 #' }
-#' hist(samplr(g,10000))
+#' hist(samplr(10000,g))
 #'
 #' h <- function(x) {
 #'   ifelse(0 < x & x < 6.2832, 1/2/pi*(sin(x) + 1), 0)
 #' }
-#' hist(samplr(h,10000))
+#' hist(samplr(10000,h))
 #'
 #' u <- function(x) {
 #'   ifelse(x < 0, 1/2*exp(x), 1/2*exp(-x))
 #' }
-#' hist(samplr(u,10000))
+#' hist(samplr(10000,u))
 #'
-#' Two dimensional (requires \code{ggplot2})
+#' Two dimensional (requires ggplot2)
 #'
 #' v <- function(z) {
 #'   x <- z[1]
 #'   y <- z[2]
 #'   ifelse(0 <= x & x <= 1 & 0 <= y & y <= 1, x + y, 0)
 #' }
-#' samps <- data.frame(samplr(v, 10000, twod = TRUE))
+#' samps <- data.frame(samplr(10000, v, twod = TRUE))
 #' colnames(samps) <- c("x","y")
 #' ggplot(samps, aes(x, y)) +
 #'   geom_density_2d()
@@ -52,7 +52,7 @@
 #'   y <- z[2]
 #'   ifelse(0 <= x & x <= 1 & 0 <= y & y <= 1 & 0 <= x + y & x + y <= 1, 24*x*y,0)
 #' }
-#' samps <- data.frame(samplr(w, 10000, twod = TRUE))
+#' samps <- data.frame(samplr(10000, w, twod = TRUE))
 #' colnames(samps) <- c("x","y")
 #' ggplot(samps, aes(x, y)) +
 #'   geom_density_2d()
@@ -62,7 +62,7 @@
 #'   y <- z[2]
 #'   ifelse(0 < x & 0 < y, exp(-x)*exp(-y), 0)
 #' }
-#' samps <- data.frame(samplr(l, 10000, twod = TRUE))
+#' samps <- data.frame(samplr(10000, l, twod = TRUE))
 #' colnames(samps) <- c("x","y")
 #' ggplot(samps, aes(x, y)) +
 #'   geom_density_2d()

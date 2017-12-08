@@ -1,58 +1,139 @@
 ---
-title: "Vignette Title"
-author: "Vignette Author"
+title: "Rejection Sampling"
+author: "Jason Bub"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Samplr}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
-
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
-
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE
+)
+library(samplr)
+library(ggplot2)
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+This package implements one and two dimensional rejection sampling for continuous probability distribution functions.
+ 
+## One-dimensional
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+The easiest form of rejection sampling occurs using one-dimensional pdfs. For example, we can sample from a beta distribution, in this case Beta(2,1). We first define a function for this pdf,
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+```{r}
+betapdf <- function(x) {
+  ifelse(0 < x & x < 1, 2*x, 0)
+}
 ```
 
-Also a quote using `>`:
+We can then use the `samplr` function to sample from this distribution, 
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+```{r}
+samplr(1,betapdf)
+```
+
+With many samples, we are able estimate the distribution by using `hist` to plot the density of the samples,
+
+```{r}
+hist(samplr(10000,betapdf), main = NULL)
+```
+
+We can also sample from distributions with unbounded support,
+
+```{r}
+f <- function(x) {
+  if (x < 0) {
+    1/2*exp(x)
+  }
+  else {
+    1/2*exp(-x)
+  }
+}
+hist(samplr(10000,f), main = NULL)
+```
+
+We can find probabilities associated with these pdfs using the `psamplr` function, which is similar to the built in R functions `pnorm`, `pbinom`, etc., which gives $P(X < q)$, for some $q$ specified in the calling of the  `psamplr` function.
+
+```{r}
+psamplr(betapdf,.5)
+psamplr(f,0)
+```
+
+Expectation can also be calculated using the `expsamplr` function, which calculates $E[X]$.
+
+```{r}
+expsamplr(betapdf)
+expsamplr(f)
+```
+
+## Two-dimensional
+
+We can also use the `samplr` function to sample from two-dimensional pdfs as well, specifying the parameter `twod = TRUE`. In this case, the input of the function that you wish to sample from must be a vector containing the random variables `x` and `y`, for example,
+
+``` {r}
+g <- function(z) {
+  x <- z[1]
+  y <- z[2]
+  ifelse(0 < x & x < 1 & 0 < y & y < 1, x + y, 0)
+}
+samplr(1, g, twod = TRUE)
+```
+
+We can get an idea of what this distribution looks like by finding many samples, and using `ggplot` with `geom_density_2d()` to get contours of the pdf.
+
+``` {r}
+samps <- data.frame(samplr(10000, g, twod = TRUE))
+colnames(samps) <- c("x","y")
+ggplot(samps, aes(x, y)) + geom_density_2d()
+```
+
+The `samplr` function also works for two-dimensional pdfs with unbounded support,
+
+```{r}
+h <- function(z) {
+  x <- z[1]
+  y <- z[2]
+  ifelse(0 < x & 0 < y, exp(-x)*exp(-y), 0)
+}
+samps <- data.frame(samplr(10000, h, twod = TRUE))
+colnames(samps) <- c("x","y")
+ggplot(samps, aes(x, y)) + geom_density_2d()
+```
+
+Like for one-dimensional pdfs, probabilities can also be calculated for two-dimensional pdfs using the `psamplr` function with a second function used to take various combinations of the random variables `X` and `Y`. The second function, `g` in the parameters, must have an input that is a vector of the random variables. For two-dimensional pdfs, `psamplr` calculates $P(g(X,Y) < q)$.
+
+```{r}
+prob1 <- function(z) {
+  x <- z[1]
+  y <- z[2]
+  x + y
+}
+prob2 <- function(z) {
+  x <- z[1]
+  y <- z[2]
+  x*y
+}
+psamplr(g,1,prob1)
+psamplr(g,1,prob2)
+```
+
+Expectation values can also be found for two-dimensional pdfs using the `expsamplr` with a second input function of a combination of the random varialbes, similar to the `psamplr` function. For two-dimensional pdfs, `expsamplr` calculates $E[g(X,Y)]$.
+
+```{r}
+expect <- function(z) {
+  x <- z[1]
+  y <- z[2]
+  x
+}
+expsamplr(g,prob1)
+expsamplr(g,expect)
+```
+
+
+
+
+
+

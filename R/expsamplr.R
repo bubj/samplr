@@ -42,10 +42,22 @@
 #' g <- function(z) {
 #'   x <- z[1]
 #'   y <- z[2]
+#'   x*y
+#' }
+#' expx <- function(z) {
+#'   x <- z[1]
+#'   y <- z[2]
 #'   x
+#' }
+#' expy <- function(z) {
+#'   x <- z[1]
+#'   y <- z[2]
+#'   y
 #' }
 #' expsamplr(f,f)
 #' expsamplr(f,g)
+#' expsamplr(f,expx)
+#' expsamplr(f,expy)
 #'
 
 

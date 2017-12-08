@@ -54,11 +54,11 @@
 
 psamplr <- function(f, q, g = NULL) {
   if (is.null(g)) {
-    samples <- samplr(f,10000)
+    samples <- samplr(10000,f)
     mean(samples < q)
   }
   else {
-    samples <- samplr(f,10000, twod = TRUE)
+    samples <- samplr(10000,f, twod = TRUE)
     values <- rep(0,10000)
     for ( i in 1:10000) {
       values[i] <- g(c(samples[i,1],samples[i,2]))

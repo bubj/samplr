@@ -123,13 +123,13 @@ psamplr(g,1,prob2)
 Expectation values can also be found for two-dimensional pdfs using the `expsamplr` with a second input function of a combination of the random varialbes, similar to the `psamplr` function. For two-dimensional pdfs, `expsamplr` calculates $E[g(X,Y)]$.
 
 ```{r}
-expect <- function(z) {
+expectx <- function(z) {
   x <- z[1]
   y <- z[2]
   x
 }
 expsamplr(g,prob1)
-expsamplr(g,expect)
+expsamplr(g,expectx)
 ```
 
 

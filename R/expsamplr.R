@@ -63,15 +63,15 @@
 
 expsamplr <- function(f, g = NULL) {
   if (is.null(g)) {
-    samples <- samplr(10000,f)
-    mean(samples)
+    samples <- samplr(10000,f) # create samples
+    mean(samples) # take the mean of the samples
   }
   else {
-    samples <- samplr(10000,f, twod = TRUE)
-    values <- rep(0,10000)
+    samples <- samplr(10000,f, twod = TRUE) # create samples
+    values <- rep(0,10000) # create a vector to store values of the samples in
     for (i in 1:10000) {
-      values[i] <- g(c(samples[i,1],samples[i,2]))
+      values[i] <- g(c(samples[i,1],samples[i,2])) # evalueate the samples in g
     }
-    mean(values)
+    mean(values) # take the mean of the values for the samples evaluated in g
   }
 }

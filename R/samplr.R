@@ -2,6 +2,8 @@
 #'
 #' This function implements both one and two variable rejection sampling for probability density functions which are bounded, but the support does not need to be bounded.
 #'
+#'
+#'
 #' @param f The pdf that we are sampling from, input as a predefined function. For one variable, the input variable must be declared as \code{x}. For two variables, the parameter of the function must be a vector containing the variables \code{x} and \code{y}.
 #'
 #' @param N The number of samples returned by the rejection sampler.
@@ -480,7 +482,7 @@ samplr <- function(N, f, twod = FALSE) {
       }
     }
     else { # if the support is not bounded
-      side <- seq(-20,20,.5) # create a vector of number from -20 to 20 by steps of .5
+      side <- seq(-50,50,.5) # create a vector of number from -30 to 30 by steps of .5
       maxpoints <- matrix(rep(0,2*(length(side)^2)),ncol = 2) # create a matrix of dimenions of the cartesian product of side
       k <- 1
       for(i in 1:length(side)) { # store the cartesian product of the vector side in the matrix
@@ -499,6 +501,10 @@ samplr <- function(N, f, twod = FALSE) {
       }
       maxf <- max(maxfvalues) # find the largest max
       mean <- maxes[which(maxfvalues == maxf),] # use the points that correspond to the largest max as non-centrality parameters in the r distribution
+      if (maxf == 0) { # if a maxf value is not found, set it equal to 1
+        maxf <- 1
+        mean <- c(0,0)
+      }
       #print(maxf)
       #print(mean)
       #print(dim(mean))

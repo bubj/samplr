@@ -54,15 +54,15 @@
 
 psamplr <- function(f, q, g = NULL) {
   if (is.null(g)) {
-    samples <- samplr(10000,f)
-    mean(samples < q)
+    samples <- samplr(10000,f) # create samples
+    mean(samples < q) # take the mean of the samples that are below q
   }
   else {
-    samples <- samplr(10000,f, twod = TRUE)
-    values <- rep(0,10000)
+    samples <- samplr(10000,f, twod = TRUE) # create samples
+    values <- rep(0,10000) # create a vector to store values in
     for ( i in 1:10000) {
-      values[i] <- g(c(samples[i,1],samples[i,2]))
+      values[i] <- g(c(samples[i,1],samples[i,2])) # evalues the samples in g
     }
-    mean(values < q)
+    mean(values < q) # take the mean of the values that are below q
   }
 }
